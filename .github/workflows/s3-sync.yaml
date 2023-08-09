@@ -1,0 +1,51 @@
+name: Synchronize dist with S3 Bucket
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - src/app/**
+      - src/assets/**
+      - src/main.ts
+      - src/env.d.ts
+      - src/polyfills.ts
+      - src/styles.scss
+      - src/index.html
+      - angular.json
+      - package.json
+      - tsconfig.app.json
+      - tsconfig.json
+      - tsconfig.spec.json
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ secrets.S3_BUCKET_SYNC_ROLE }}
+        aws-region: eu-north-1
+    - name: Set up Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm ci
+    - name: Set up environment variables
+      run: | 
+        echo "NG_APP_COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID" > .env
+        echo "NG_APP_COGNITO_USER_POOL_CLIENT_ID=$COGNITO_USER_POOL_CLIENT_ID" >> .env
+      env:
+        COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
+        COGNITO_USER_POOL_CLIENT_ID: ${{ secrets.COGNITO_USER_POOL_CLIENT_ID }}
+    - name: Build
+      run: npm run build
+    - name: sync 
+      run: aws s3 sync dist/ordlista s3://${{ secrets.S3_BUCKET }} --delete

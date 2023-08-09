@@ -1,0 +1,84 @@
+<div class="container" *ngIf="!userId else authPage">
+    <div class="notification is-warning">
+        Du måste logga in.
+    </div>
+</div>
+
+<ng-template #authPage>
+    <div *ngIf="listError else mainPage" class="notificationis-danger">
+        {{ listError }}
+    </div>
+    <ng-template #mainPage>
+        <div class="container" *ngIf="list">
+            <section class="section">
+                <nav class="breadcrumb" aria-label="breadcrumbs">
+                    <ul>
+                        <li><a [routerLink]="['','mina-listor']">Mina ordlistor</a></li>
+                        <li class="is-active"> {{ list.name }}</li>
+                    </ul>
+                </nav>
+                <div class="is-flex is-justify-content-space-between is-align-items-center">
+                    <h1 class="is-size-3">{{ list.name }}</h1>
+                    <div class="dropdown is-right" [ngClass]="dropdownMenuOpen ? 'is-active' : ''">
+                        <div class="dropdown-trigger">
+                            <button class="button no-border has-background-light" aria-haspopup="true"
+                                aria-controls="dropdown-menu" (click)="dropdownMenuOpen = !dropdownMenuOpen">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <button class="button dropdown-item no-border"
+                                    (click)="editListModalOpen = true; dropdownMenuOpen = false">
+                                    Redigera
+                                </button>
+                                <button class="button dropdown-item has-text-danger no-border"
+                                    (click)="deleteListModalOpen = true; dropdownMenuOpen = false">
+                                    Ta bort
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p>{{ list.description }}</p>
+                <p class="is-size-5" *ngIf="words">{{ words.length }} ord</p>
+            </section>
+            <section class="section py-0">
+                <div *ngIf="fetchingWordsError; else wordsTemplate" class="notification is-danger" role="alert">
+                    {{ fetchingWordsError }}
+                </div>
+                <ng-template #wordsTemplate>
+                    <div *ngIf="isFetchingWords; else dataTemplate" role="status"
+                        class="is-flex is-justify-content-center">
+                        <span class="loader"></span>
+                    </div>
+                    <ng-template #dataTemplate>
+                        <div class="columns is-multiline">
+                            <app-word-card *ngFor="let word of words" [word]="word" [listId]="list.id"
+                                [userId]="userId!" [submitCallback]="updateWord" [deleteCallback]="deleteWord"
+                                class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd"></app-word-card>
+                        </div>
+                    </ng-template>
+                </ng-template>
+            </section>
+            <section class="section" *ngIf="words">
+                <button *ngIf="!isEditingNewWord" class="button is-primary" (click)="isEditingNewWord = true">Läg ny
+                    ord</button>
+                <button class="button is-info ml-2" (click)="searchWordModalOpen = true">Sök på lexikonet</button>
+                <div class="columns">
+                    <app-word-card *ngIf="isEditingNewWord" [isNewWord]="true" [listId]="list.id" [userId]="userId!"
+                        [submitCallback]="addWord"
+                        class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd"></app-word-card>
+                </div>
+            </section>
+
+            <app-save-list-modal [isActive]="editListModalOpen" [closeCallback]="closeEditListModal"
+                [onSuccessCallback]="onListUpdated" [userId]="this.userId" [list]="list"></app-save-list-modal>
+            <app-delete-modal [isActive]="deleteListModalOpen" [closeCallback]="closeDeleteListModal"
+                [onSuccessCallback]="onListDeleted" [dataName]="list.name" [dataType]="'list'"
+                [dataId]="list.id"></app-delete-modal>
+            <app-search-word-modal [isActive]="searchWordModalOpen" [closeCallback]="closeSearchWordModal"
+                [listId]="list.id" [userId]="userId!" [addWordCallback]="addWord"></app-search-word-modal>
+        </div>
+    </ng-template>
+</ng-template>

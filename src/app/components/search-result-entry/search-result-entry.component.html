@@ -1,0 +1,24 @@
+<div class="card mb-2">
+    <div class="card-content">
+        <div class="content">
+            <div class="is-flex is-justify-content-space-between is-align-items-center">
+                <div>
+                    <h3 class="is-size-4 mr-1" style="display: inline-block;">{{ word.swedishWord }}</h3>
+                    <span class="has-text-grey">{{ word.category }}</span>
+                </div>
+                <button *ngIf="!wordAdded" class="button is-primary" (click)="addWord()"
+                    [ngClass]="isRequesting ? 'is-loading' : ''">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <button *ngIf="wordAdded" class="button is-success" disabled>
+                    <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+            <p class="mt-0">{{ word.translation }}</p>
+            <hr class="my-0">
+            <ul style="list-style: none; margin-left: 0;">
+                <li *ngFor="let example of word.examples">{{ example }}</li>
+            </ul>
+        </div>
+    </div>
+</div>

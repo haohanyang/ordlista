@@ -1,0 +1,14 @@
+<div class="container">
+    <section class="section">
+        <amplify-authenticator>
+            <ng-template amplifySlot="authenticated" let-user="user" let-signOut="signOut">
+                <div class="notification is-info">
+                    <p>Du är inloggad.</p>
+                    <p><a href="/mina-listor">Visa mina ordlistor</a></p>
+                </div>
+
+                <button class="button" (click)="signOut()">Logga ut</button>
+            </ng-template>
+        </amplify-authenticator>
+    </section>
+</div>

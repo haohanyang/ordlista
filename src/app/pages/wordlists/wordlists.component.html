@@ -1,0 +1,41 @@
+<div class="container" *ngIf="!userId else authPage">
+    <section class="section">
+        <div class="notification is-warning">
+            Du måste logga in.
+        </div>
+    </section>
+</div>
+<ng-template #authPage>
+    <div class="container">
+
+        <section class="section">
+            <div class="is-flex is-justify-content-space-between is-align-items-center">
+                <h2 class="is-size-3">Mina ordlistor</h2>
+                <button class="button is-primary" *ngIf="wordLists" (click)="createNewListModalOpen = true">
+                    Ny lista
+                </button>
+            </div>
+        </section>
+
+        <section class="section py-0">
+            <div *ngIf="fetchingListsError; else fetchingTemplate" class="notification is-danger" role="alert">
+                {{ fetchingListsError }}
+            </div>
+
+            <ng-template #fetchingTemplate>
+                <div *ngIf="isFetchingLists else listTemplate" role="status" class="is-flex is-justify-content-center">
+                    <span class="loader"></span>
+                </div>
+                <ng-template #listTemplate>
+                    <div *ngIf="wordLists" class="columns is-multiline">
+                        <app-word-list-card *ngFor="let list of wordLists"
+                            class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd"
+                            [list]="list"></app-word-list-card>
+                    </div>
+                </ng-template>
+                <app-save-list-modal [isActive]="createNewListModalOpen" [closeCallback]="closeCreateListModal"
+                    [onSuccessCallback]="onNewListCreated" [userId]="this.userId"></app-save-list-modal>
+            </ng-template>
+        </section>
+    </div>
+</ng-template>
