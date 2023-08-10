@@ -18,7 +18,6 @@ export default class AuthService {
       ]
     })
 
-
     this.getUserId().subscribe(userId => this.userIdSubject.next(userId))
 
     Hub.listen("auth", async ({ payload: { event, data } }) => {
@@ -57,13 +56,10 @@ export default class AuthService {
       )
   }
 
-  signOut(callback: () => void) {
-    from(Auth.signOut()).pipe(
-      tap(() => {
-        this.userIdSubject.next(null)
-        callback()
-      })
-    )
+  signOut(): Observable<void> {
+    return from(Auth.signOut().then(() => {
+      this.userIdSubject.next(null)
+    }))
   }
 }
 

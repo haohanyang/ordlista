@@ -17,6 +17,7 @@ export class AppComponent implements OnDestroy {
   menuActive = false;
   userDropdownActive = false;
   isResolvingRoute = false;
+  isSigningOut = false;
   routerUnsubscribe = new Subject<void>();
 
   constructor(private authService: AuthService, private httpService: HttpService, private router: Router) {
@@ -54,9 +55,10 @@ export class AppComponent implements OnDestroy {
   }
 
   signOut() {
-    this.authService.signOut(() => {
+    this.isSigningOut = true
+    this.authService.signOut().subscribe(() => {
       this.user = null
-      this.router.navigate(["/"])
+      this.router.navigate(["/"]).then(() => window.location.reload())
     })
   }
 }

@@ -54,7 +54,7 @@
                 </a>
                 <hr class="dropdown-divider">
                 <div class="dropdown-item">
-                  <button class="button" type="button" (click)="signOut()">
+                  <button class="button" type="button" (click)="signOut()" [ngClass]="isSigningOut ? 'is-loading' : ''">
                     Logga ut
                   </button>
                 </div>
