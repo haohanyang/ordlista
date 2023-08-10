@@ -40,6 +40,9 @@ def lambda_handler(event, context):
         }
         table.put_item(Item=user_item)
         logger.info(f"User {user_id} created")
+
+        # We don't need to confirm the email for now
+        event["response"]["autoConfirmUser"] = "true"
         return event
     except Exception as e:
         logger.error(e)
