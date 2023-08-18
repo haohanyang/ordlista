@@ -1,7 +1,12 @@
 {
-    "name": "Ordlista",
-    "short_name": "Ol",
-    "icons": [
+  "name": "Ordlista",
+  "short_name": "Ordlista",
+  "theme_color": "#1976d2",
+  "background_color": "#fafafa",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
         {
             "src": "assets/android-chrome-192x192.png",
             "sizes": "192x192",
@@ -12,8 +17,5 @@
             "sizes": "512x512",
             "type": "image/png"
         }
-    ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "standalone"
+    ]
 }
