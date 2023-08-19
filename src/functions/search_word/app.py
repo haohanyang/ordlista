@@ -2,8 +2,7 @@ import json
 import boto3
 import logging
 import os
-from boto3.dynamodb.conditions import Key
-
+import pg8000.native
 
 def lambda_handler(event, context):
     """
@@ -25,43 +24,31 @@ def lambda_handler(event, context):
             }
 
         keyword = body["keyword"]
+        if "%" in keyword or "(" in keyword or ")" in keyword:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({"message": "Invalid keyword"}),
+            }
 
-        dyn_resource = boto3.resource("dynamodb")
-        dict_table = dyn_resource.Table(os.environ["DICT_TABLE"])
-        dict_table.load()
+        # table_name = os.environ["DICT_TABLE"]
+        # TODO: Use the table name from the environment variable
+        con = pg8000.native.Connection("postgres",
+            host=os.environ["PG_HOST"], database="postgres", password=os.environ["PG_PASSWORD"])
+        rows = con.run("SELECT * FROM test.dictionary WHERE swedish_word LIKE (:kw) LIMIT 10", kw=keyword + "%")
+        words = []
+        for row in rows:
+            word = {
+            "id": row[0],
+            "swedishWord": row[1],
+            "category": "",
+            "class": row[2],
+            "audioUrl": "",
+            "inflections": " ".join(row[6]),
+            "translation": ", ".join(row[3]),
+            "examples": row[4],
+            "synonyms": ", ".join(row[5])
+            }
 
-        kwargs = {
-            "IndexName": "swedishWord-class-index",
-            "KeyConditionExpression": Key("swedishWord").eq(keyword),
-            "ProjectionExpression": "",
-            "ExpressionAttributeNames": {},
-        }
-
-        attributes = [
-            "class",
-            "swedishWord",
-            "audioUrl",
-            "inflections",
-            "translations",
-            "examples",
-            "synonyms",
-        ]
-
-        for attribute in attributes:
-            kwargs["ProjectionExpression"] += "#" + attribute + ","
-            kwargs["ExpressionAttributeNames"]["#" + attribute] = attribute
-
-        # Remove last comma
-        kwargs["ProjectionExpression"] = kwargs["ProjectionExpression"][:-1]
-
-        result = dict_table.query(**kwargs)["Items"]
-
-        for i in range(len(result)):
-            item = result[i]
-            item["inflections"] = " ".join(item["inflections"])
-            item["translation"] = ", ".join(item["translations"])
-            item["synonyms"] = ", ".join(item["synonyms"])
-            item["category"] = ""
             """
             pp -> preposition
             kn -> konjunktion
@@ -75,33 +62,36 @@ def lambda_handler(event, context):
             nn -> substantiv
             abbrev -> förkortning
             """
-            word_class = item["class"]
+            word_class = word["class"]
             if word_class == "nn":
-                item["category"] = "substantiv"
+                word["category"] = "substantiv"
             elif word_class == "jj":
-                item["category"] = "adjektiv"
+                word["category"] = "adjektiv"
             elif word_class == "vb":
-                item["category"] = "verb"
+                word["category"] = "verb"
             elif word_class == "ab":
-                item["category"] = "adverb"
+                word["category"] = "adverb"
             elif word_class == "pp":
-                item["category"] = "preposition"
+                word["category"] = "preposition"
             elif word_class == "kn":
-                item["category"] = "konjunktion"
+                word["category"] = "konjunktion"
             elif word_class == "in":
-                item["category"] = "interjektion"
+                word["category"] = "interjektion"
             elif word_class == "pn":
-                item["category"] = "pronomen"
+                word["category"] = "pronomen"
             elif word_class == "prefix":
-                item["category"] = "prefix"
+                word["category"] = "prefix"
             elif word_class == "abbrev":
-                item["category"] = "förkortning"
+                word["category"] = "förkortning"
             else:
-                item["category"] = "övrigt"
+                word["category"] = "övrigt"
+            words.append(word)
+
+
 
         return {
             "statusCode": 200,
-            "body": json.dumps({"result": result}, ensure_ascii=False),
+            "body": json.dumps({"result": words}, ensure_ascii=False),
         }
     except Exception as e:
         logger.error(e)

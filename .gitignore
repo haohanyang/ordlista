@@ -67,3 +67,4 @@ venv
 .vscode
 
 .aws-sam
+venv
