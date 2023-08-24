@@ -1,8 +1,8 @@
 import json
-import boto3
 import logging
 import os
 import pg8000.native
+
 
 def lambda_handler(event, context):
     """
@@ -32,21 +32,28 @@ def lambda_handler(event, context):
 
         # table_name = os.environ["DICT_TABLE"]
         # TODO: Use the table name from the environment variable
-        con = pg8000.native.Connection("postgres",
-            host=os.environ["PG_HOST"], database="postgres", password=os.environ["PG_PASSWORD"])
-        rows = con.run("SELECT * FROM test.dictionary WHERE swedish_word LIKE (:kw) LIMIT 10", kw=keyword + "%")
+        con = pg8000.native.Connection(
+            "postgres",
+            host=os.environ["PG_HOST"],
+            database="postgres",
+            password=os.environ["PG_PASSWORD"],
+        )
+        rows = con.run(
+            "SELECT * FROM test.dictionary WHERE swedish_word LIKE (:kw) LIMIT 10",
+            kw=keyword + "%",
+        )
         words = []
         for row in rows:
             word = {
-            "id": row[0],
-            "swedishWord": row[1],
-            "category": "",
-            "class": row[2],
-            "audioUrl": "",
-            "inflections": " ".join(row[6]),
-            "translation": ", ".join(row[3]),
-            "examples": row[4],
-            "synonyms": ", ".join(row[5])
+                "id": row[0],
+                "swedishWord": row[2],
+                "category": "",
+                "class": row[3],
+                "audioUrl": "",
+                "inflections": " ".join(row[7]),
+                "translation": ", ".join(row[4]),
+                "examples": row[5],
+                "synonyms": ", ".join(row[6]),
             }
 
             """
@@ -86,8 +93,6 @@ def lambda_handler(event, context):
             else:
                 word["category"] = "övrigt"
             words.append(word)
-
-
 
         return {
             "statusCode": 200,
