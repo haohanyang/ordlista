@@ -1,64 +1,73 @@
 import { Injectable } from "@angular/core"
-import { Hub, Auth, Amplify } from "aws-amplify"
-import { BehaviorSubject, Observable, from, map, tap, catchError, of } from "rxjs"
+import { Router } from "@angular/router"
+import { Auth } from "aws-amplify"
+import { Observable, from, tap, map, catchError, of, BehaviorSubject } from "rxjs"
 
 @Injectable({
   providedIn: "root"
 })
 export default class AuthService {
-  userIdSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null)
+  userIdSubject$ = new BehaviorSubject<string | null>(null)
+  idTokenSubject$ = new BehaviorSubject<string>("")
+  private readonly authenticationTrigger$ =
+    from(Auth.currentAuthenticatedUser()).pipe(
+      tap((e) => {
+        this.userIdSubject$.next(e.username)
+        this.idTokenSubject$.next(e.signInUserSession.getIdToken().getJwtToken())
+      }),
+      catchError(_error => {
+        console.log(_error)
+        return of(null)
+      })
+    )
 
-  constructor() {
-    Amplify.configure({
-      aws_cognito_region: "eu-north-1",
-      aws_user_pools_id: import.meta.env.NG_APP_COGNITO_USER_POOL_ID,
-      aws_user_pools_web_client_id: import.meta.env.NG_APP_COGNITO_USER_POOL_CLIENT_ID,
-      aws_cognito_username_attributes: [
-        "EMAIL"
-      ]
+  readonly isAuthenticated$ = this.authenticationTrigger$.pipe(
+    map(result => !!result)
+  )
+
+  readonly userId$ = this.authenticationTrigger$.pipe(
+    map(result => result ? result.username as string : null),
+  )
+
+  readonly idToken$ = from(Auth.currentSession()).pipe(
+    map(result => result.getIdToken().getJwtToken()),
+    catchError(_error => {
+      console.log(_error)
+      return of("")
     })
+  )
 
-    this.getUserId().subscribe(userId => this.userIdSubject.next(userId))
+  constructor(private router: Router) { }
 
-    Hub.listen("auth", async ({ payload: { event, data } }) => {
-      switch (event) {
-        case "signIn":
-          this.userIdSubject.next(data.username)
-          break
-        case "signOut":
-          this.userIdSubject.next(null)
-          break
-        default:
-          console.warn("Unhandled event: " + event)
+  signUp(email: string, username: string, password: string): Observable<any> {
+    return from(Auth.signUp({
+      username: email,
+      password: password,
+      attributes: {
+        preferred_username: username,
       }
-    })
+    }))
   }
 
-  getUserId(): Observable<string | null> {
-    return from(Auth.currentAuthenticatedUser())
+  confirmSignUp(email: string, code: string): Observable<any> {
+    return from(Auth.confirmSignUp(email, code))
+  }
+
+  signIn(email: string, password: string): Observable<any> {
+    return from(Auth.signIn(email, password))
       .pipe(
-        map(result => {
-          return result.username
-        }),
-        catchError(error => {
-          console.error(error)
-          return of(null)
+        tap((e) => {
+          this.userIdSubject$.next(e.username)
+          this.idTokenSubject$.next(e.signInUserSession.getIdToken().getJwtToken())
         })
       )
   }
 
-  getIdToken(): Observable<string> {
-    return from(Auth.currentSession())
-      .pipe(
-        map(result => {
-          return result.getIdToken().getJwtToken()
-        })
-      )
-  }
-
-  signOut(): Observable<void> {
-    return from(Auth.signOut().then(() => {
-      this.userIdSubject.next(null)
+  logOut(): Observable<any> {
+    return from(Auth.signOut()).pipe(tap(() => {
+      this.userIdSubject$.next(null)
+      this.idTokenSubject$.next("")
+      this.router.navigate(["/"])
     }))
   }
 }

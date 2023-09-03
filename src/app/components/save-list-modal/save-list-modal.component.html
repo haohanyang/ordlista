@@ -1,36 +1,21 @@
-<div class="modal" [ngClass]="isActive ? 'is-active' : ''">
-    <div class="modal-background"></div>
-    <form class="modal-card" [formGroup]="listFormGroup" (ngSubmit)="saveList()">
-        <header class="modal-card-head">
-            <p *ngIf="!list" class="modal-card-title">
-                Skapa en ny lista
-            </p>
-            <p *ngIf="list" class="modal-card-title">
-                Redigera listan {{ list.name }}
-            </p>
-        </header>
-        <section class="modal-card-body">
-            <div class="field">
-                <label class="label">Namn</label>
-                <div class="control">
-                    <input class="input" type="text" formControlName="name" required>
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Beskrivning</label>
-                <div class="control">
-                    <textarea class="textarea" formControlName="description"></textarea>
-                </div>
-            </div>
-            <div *ngIf="requestError">
-                <div class="notification is-danger" role="alert">
-                    {{ requestError }}
-                </div>
-            </div>
-        </section>
-        <footer class="modal-card-foot">
-            <button type="submit" class="button is-primary" [ngClass]="isRequesting ? 'is-loading' : ''">Spara</button>
-            <button type="button" class="button" (click)="closeCallback()">Avbryt</button>
-        </footer>
-    </form>
+<h1 mat-dialog-title>{{ data.list ? "Edit list " + data.list.name : "Create new list" }}</h1>
+<form id="save-list-form" mat-dialog-content [formGroup]="listFormGroup" (ngSubmit)="saveList()">
+    <mat-form-field appearance="outline" class="w-full pt-3">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+</form>
+<div mat-dialog-actions>
+    <div class="ml-auto">
+        <button mat-stroked-button type="button" class="w-24" [mat-dialog-close]="true" cdkFocusInitial>Cancel</button>
+        <button mat-flat-button color="primary" type="submit" form="save-list-form" class="w-24"
+            [disabled]="isRequesting">
+            <mat-spinner *ngIf="isRequesting" diameter="20"></mat-spinner>
+            <span *ngIf="!isRequesting">Save</span>
+        </button>
+    </div>
 </div>

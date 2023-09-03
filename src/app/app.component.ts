@@ -1,64 +1,15 @@
-import { Component, OnDestroy } from "@angular/core"
+import { Component, OnInit } from "@angular/core"
 import AuthService from "./auth.service"
-import { Subject, Subscription, of, switchMap, takeUntil } from "rxjs"
-import HttpService, { HttpServiceResponse } from "./http.service"
-import { User } from "./models/user"
-import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterEvent } from "@angular/router"
+import { Observable } from "rxjs"
+import { Router } from "@angular/router"
+import { Title } from "@angular/platform-browser"
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+    selector: "app-root",
+    templateUrl: "./app.component.html",
+    styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnDestroy {
-  isMenuCollapsed = true;
-  user: User | null = null;
-  userSubscription: Subscription | null = null;
-  menuActive = false;
-  userDropdownActive = false;
-  isResolvingRoute = false;
-  isSigningOut = false;
-  routerUnsubscribe = new Subject<void>();
-
-  constructor(private authService: AuthService, private httpService: HttpService, private router: Router) {
-    this.userSubscription = this.authService.getUserId().pipe(switchMap(userId => {
-      if (userId) {
-        return this.httpService.getUserProfile(userId)
-      }
-      const data: HttpServiceResponse<User> = { data: null, error: null }
-      return of(data)
-    })).subscribe(result => {
-      if (result.data) {
-        this.user = result.data
-      }
-    })
-
-    this.router.events.pipe(takeUntil(this.routerUnsubscribe))
-      .subscribe((routerEvent) => {
-        this.checkRouterEvent(routerEvent as RouterEvent)
-      })
-  }
-
-  checkRouterEvent(routerEvent: RouterEvent): void {
-    if (routerEvent instanceof NavigationStart) {
-      this.isResolvingRoute = true
+export class AppComponent {
+    constructor(private auth: AuthService) {
     }
-    if (routerEvent instanceof NavigationEnd || routerEvent instanceof NavigationCancel ||
-      routerEvent instanceof NavigationError) {
-      this.isResolvingRoute = false
-    }
-  }
-
-  ngOnDestroy() {
-    this.userSubscription?.unsubscribe()
-    this.routerUnsubscribe.next()
-  }
-
-  signOut() {
-    this.isSigningOut = true
-    this.authService.signOut().subscribe(() => {
-      this.user = null
-      this.router.navigate(["/"]).then(() => window.location.reload())
-    })
-  }
 }

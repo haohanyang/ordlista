@@ -1,156 +1,35 @@
-<div *ngIf="!isEditMode && !isNewWord else editTemplate" class="card">
-    <div class="card-content">
-        <div class="title is-flex is-justify-content-space-between is-align-items-center">
-            <div>
-                <span class="is-size-4">{{ word.swedishWord }}</span>
-                <span class="is-size-6 has-text-weight-normal ml-2 mt-1">{{ word.category }}</span>
-            </div>
-            <div class="dropdown" [ngClass]="dropdownMenuOpen ? 'is-active' : ''">
-                <div class="dropdown-trigger">
-                    <button class="button no-border" aria-haspopup="true" aria-controls="dropdown-menu"
-                        (click)="dropdownMenuOpen = !dropdownMenuOpen">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </button>
-                </div>
-                <div class="dropdown-menu" role="menu">
-                    <div class="dropdown-content">
-                        <button class="button dropdown-item no-border" (click)="isEditMode = true">
-                            Redigera
-                        </button>
-                        <button class="button dropdown-item has-text-danger no-border"
-                            (click)="deleteWordModalOpen = true"> Ta bort </button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <p class="subtitle mb-1">
-            {{ word.translation }}
+<mat-card appearance="outlined">
+    <mat-card-header class="bg-teal-200">
+        <mat-card-title>{{ word.swedishWord }}</mat-card-title>
+        <mat-card-subtitle>{{ word.category }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="bg-teal-200">
+        <p class="text-lg">
+            {{word.translation}}
         </p>
-        <button *ngIf="word.audioUrl" class="button pl-0 no-border" (click)="playAudio(word.audioUrl)">
-            <i class="fa-solid fa-volume-low"></i>
-        </button>
-        <p class="subtitle mb-1">
-            {{ word.inflections }}
-        </p>
-        <div *ngIf="word.synonyms.trim()">
-            <strong>Synonymer</strong>
-            <p>{{ word.synonyms }}</p>
-        </div>
+        <strong *ngIf="word.inflections">Inflections</strong>
+        <p *ngIf="word.inflections" class="my-0 text-lg">{{ word.inflections }}</p>
+        <strong *ngIf="word.synonyms">Synonyms</strong>
+        <p *ngIf="word.synonyms">{{ word.synonyms }}</p>
         <div *ngIf="word.examples.length > 0">
-            <hr class="my-1">
-            <strong>Exempel</strong>
+            <strong>Examples</strong>
             <ul>
                 <li *ngFor="let example of word.examples">{{ example }}</li>
             </ul>
         </div>
-
-    </div>
-</div>
-
-<ng-template #editTemplate>
-    <div class="card">
-        <form [formGroup]="wordForm" class="card-content" (ngSubmit)="saveWord()">
-            <label class="label">Ord</label>
-            <div class="field has-addons">
-                <p class="control">
-                    <span class="select">
-                        <select formControlName="category">
-                            <option selected value="substantiv">substantiv</option>
-                            <option value="adjektiv">adjektiv</option>
-                            <option value="verb">verb</option>
-                            <option value="adverb">adverb</option>
-                            <option value="preposition">preposition</option>
-                            <option value="konjunktion">konjunktion</option>
-                            <option value="interjektion">interjektion</option>
-                            <option value="pronomen">pronomen</option>
-                            <option value="prefix">prefix</option>
-                            <option value="förkortning">förkortning</option>
-                            <option value="övrigt">övrigt</option>
-                        </select>
-                    </span>
-                </p>
-                <p class="control is-expanded">
-                    <input class="input" placeholder="ord" type="text" formControlName="swedishWord" required>
-                </p>
-            </div>
-
-            <div class="field">
-                <label class="label">Översättning</label>
-                <div class="control">
-                    <input class="input" type="text" formControlName="translation">
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label">Böjningar</label>
-                <div class="control">
-                    <input class="input" type="text" formControlName="inflections">
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label">Synonymer</label>
-                <div class="control">
-                    <input class="input" type="text" formControlName="synonyms">
-                </div>
-            </div>
-
-            <div class="is-flex is-justify-content-space-between is-align-items-center mb-0">
-                <div>
-                    <label class="label">ljudlänk</label>
-                </div>
-                <button class="button no-border" type="button" (click)="genAudioUrl()">
-                    <i class="fa-brands fa-google"></i>
-                </button>
-            </div>
-            <div class="field has-addons">
-                <div class="control is-expanded">
-                    <input class="input" type="text" formControlName="audioUrl">
-                </div>
-                <div class="control">
-                    <button class="button" type="button" (click)="playAudio(audioUrl.value)">
-                        <i class="fa-solid fa-volume-low"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="is-flex is-justify-content-space-between is-align-items-center mb-1">
-                <div>
-                    <label class="label">Exempel</label>
-                </div>
-                <button type="button" class="button no-border" (click)="addExample()">
-                    <i class="fa-solid fa-circle-plus has-text-primary"></i>
-                </button>
-            </div>
-
-            <div formArrayName="examples">
-                <div *ngFor="let example of examples.controls; let i = index" class="field has-addons mb-0">
-                    <div class="control is-expanded">
-                        <input class="input mb-2 border" type="text" id="example-{{ i }}" [formControlName]="i">
-                    </div>
-                    <div class="control">
-                        <button type="button" class="level-right button" (click)="removeExample(i)">
-                            <i class="fa-solid fa-trash has-text-danger"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="my-1">
-            <div class="buttons mt-2">
-                <button type="button" class="button is-danger ml-auto mb-0" (click)="isEditMode = false">Avbryt</button>
-                <button type="submit" class="button is-primary mb-0"
-                    [ngClass]="isSaving ? 'is-loading' : ''">Spara</button>
-            </div>
-
-            <div *ngIf="savingError" class="notification is-danger" role="alert">
-                {{ savingError }}
-            </div>
-        </form>
-    </div>
-</ng-template>
-
-<app-delete-modal [isActive]="deleteWordModalOpen" [closeCallback]="closeDeleteWordModal"
-    [onSuccessCallback]="onWordDeleted" [dataName]="word.swedishWord" [dataType]="'word'"
-    [dataId]="word.id"></app-delete-modal>
+    </mat-card-content>
+    <mat-card-actions class="justify-between bg-teal-200 items-center">
+        <div>
+            <button mat-button (click)="openSaveWordModal()">EDIT</button>
+            <button mat-button color="warn" (click)="openDeleteWordModal()">DELETE</button>
+        </div>
+        <div>
+            <button *ngIf="word.audioUrl" mat-icon-button (click)="playAudio()">
+                <mat-icon>volume_up_outline</mat-icon>
+            </button>
+            <button mat-icon-button>
+                <mat-icon>favorite</mat-icon>
+            </button>
+        </div>
+    </mat-card-actions>
+</mat-card>

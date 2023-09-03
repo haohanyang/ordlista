@@ -1,20 +1,20 @@
-<div class="modal" [ngClass]="isActive ? 'is-active' : ''">
-    <div class="modal-background"></div>
-    <div class="modal-card" (ngSubmit)="deleteData()">
-        <header class="modal-card-head">
-            <p class="modal-card-title">Ta bort {{ dataName }}</p>
-        </header>
-        <section class="modal-card-body">
-            <p *ngIf="dataType== 'list'">Är du säker på att du vill ta bort listan <strong>{{ dataName }}</strong>?</p>
-            <p *ngIf="dataType == 'word'">Är du säker på att du vill ta bort ordet <strong>{{ dataName }}</strong>?</p>
-            <div *ngIf="requestError" class="notification is-danger">
-                {{ requestError}}
-            </div>
-        </section>
-        <footer class="modal-card-foot">
-            <button type="button" class="button" (click)="closeCallback()">Nej</button>
-            <button type="submit" class="button is-danger" [ngClass]="isRequesting ? 'is-loading':''"
-                (click)="deleteData()">Ja</button>
-        </footer>
+<h1 mat-dialog-title>Delete {{ data.dataName }}</h1>
+<div mat-dialog-content>
+    <p *ngIf="data.dataType== 'list'">Are you sure you want to delete the list
+        <strong>{{ data.dataName }}</strong>
+        ?
+    </p>
+    <p *ngIf="data.dataType == 'word'">Are you sure you want to delete the word
+        <strong>{{ data.dataName }}</strong>
+        ?
+    </p>
+</div>
+<div mat-dialog-actions>
+    <div class="ml-auto">
+        <button type="button" mat-flat-button color="warn" (click)="deleteData()" [disabled]="isRequesting">
+            <span *ngIf="!isRequesting">Yes</span>
+            <mat-spinner *ngIf="isRequesting" diameter="20"></mat-spinner>
+        </button>
+        <button type="button" mat-stroked-button [mat-dialog-close]="true">No</button>
     </div>
 </div>

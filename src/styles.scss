@@ -1,40 +1,68 @@
-@import "bulma/css/bulma.css";
-@import "@fortawesome/fontawesome-free/css/all.css";
-@import "@aws-amplify/ui/dist/styles.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-    font-family: 'PT Sans', sans-serif;
+    height: 100%;
 }
 
-main {
-    min-height: calc(100vh - 56px);
+body {
+    font-family: "Roboto Flex", Roboto, "Helvetica Neue", sans-serif;
 }
 
-.navbar-item img {
-    max-height: 100px;
+#fill {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: env(safe-area-inset-bottom);
+    background-color: #009688;
+    z-index: 50;
 }
 
-.no-border {
-    border: none;
+.bottom-nav {
+    bottom: env(safe-area-inset-bottom);
 }
 
-.loader {
-    width: 48px;
-    height: 48px;
-    border: 5px solid hsl(171, 100%, 41%);
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
+.mdc-notched-outline__notch {
+    border-right: none;
 }
 
-@keyframes rotation {
-    0% {
-        transform: rotate(0deg);
+.bs-container {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .bs-container {
+        max-width: 540px;
     }
+}
 
-    100% {
-        transform: rotate(360deg);
+@media (min-width: 768px) {
+    .bs-container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .bs-container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .bs-container {
+        max-width: 1140px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .bs-container {
+        max-width: 1320px;
     }
 }
