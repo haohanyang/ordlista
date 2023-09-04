@@ -25,6 +25,7 @@ export default class AuthService {
 
   readonly idToken$ = from(Auth.currentSession()
     .then(result => result.getIdToken().getJwtToken()).catch(_error => ""))
+    .pipe()
 
   readonly userId$ = this.authenticationTrigger$.pipe(
     map(result => result ? result.username as string : null),
