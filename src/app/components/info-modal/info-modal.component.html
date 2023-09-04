@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>About ordlista</h2>
+<h2 mat-dialog-title>About Ordlista</h2>
 <mat-dialog-content>
     <mat-list>
         <mat-list-item>
@@ -20,7 +20,8 @@
                 <span matListItemLine *ngIf="branchInfo.commit.sha === commitHash" style="color: green;">Up-to-date in
                     the current branch</span>
                 <span matListItemLine *ngIf="branchInfo.commit.sha !== commitHash" class="text-green-500">
-                    <a target="_blank" [href]="branchInfo.commit.html_url">New version</a> available
+                    <a target="_blank" [href]="branchInfo.commit.html_url" class="text-blue-600">New version</a>
+                    available
                 </span>
             </mat-list-item>
             <mat-list-item *ngIf="(buildInfo$ | async) as buildInfo">

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core"
 import HttpService from "../../http.service"
 import { WordList } from "../../models/wordlist"
-import { Observable, catchError, map, of, switchMap, tap } from "rxjs"
+import { Observable, catchError, map, of, switchMap } from "rxjs"
 import { Router } from "@angular/router"
 import { MatDialog } from "@angular/material/dialog"
 import { SaveListModalComponent, SaveListModalData } from "src/app/components/save-list-modal/save-list-modal.component"

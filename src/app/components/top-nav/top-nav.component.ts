@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, OnInit } from "@angular/core"
 import { MatDialog } from "@angular/material/dialog"
 import { Title } from "@angular/platform-browser"
 import { Router } from "@angular/router"
@@ -8,38 +8,52 @@ import HttpService from "src/app/http.service"
 import { InfoModalComponent } from "../info-modal/info-modal.component"
 
 @Component({
-    selector: "app-top-nav",
-    templateUrl: "./top-nav.component.html",
+  selector: "app-top-nav",
+  templateUrl: "./top-nav.component.html",
 })
-export class TopNavComponent {
-    constructor(public auth: AuthService, private titleService: Title, private router: Router,
-        private dialog: MatDialog, public http: HttpService) {
-    }
+export class TopNavComponent implements OnInit {
+  promptEvent: any
+  constructor(public auth: AuthService, private titleService: Title, private router: Router,
+    private dialog: MatDialog, public http: HttpService) {
+  }
 
-    get title() {
-        return this.titleService.getTitle()
-    }
+  ngOnInit() {
+    window.addEventListener('beforeinstallprompt', (event: any) => {
+      event.preventDefault()
+      console.log("beforeinstallprompt")
+      this.promptEvent = event
+    })
 
-    get backUrl() {
-        if (this.router.url.match(/\/lists\/[a-z0-9-]+/)) {
-            return "/my-lists"
-        }
-        return ""
-    }
+    window.addEventListener("appinstalled", () => {
+      console.log("afterinstallprompt")
+      this.promptEvent = null
+    })
+  }
 
-    goBack() {
-        this.router.navigate([this.backUrl])
-    }
+  get title() {
+    return this.titleService.getTitle()
+  }
 
-    openLogoutModal() {
-        this.dialog.open(LogoutModalComponent, {
-            width: "400px"
-        })
+  get backUrl() {
+    if (this.router.url.match(/\/lists\/[a-z0-9-]+/)) {
+      return "/my-lists"
     }
+    return ""
+  }
 
-    openInfoModal() {
-        this.dialog.open(InfoModalComponent, {
-            width: "400px"
-        })
-    }
+  goBack() {
+    this.router.navigate([this.backUrl])
+  }
+
+  openLogoutModal() {
+    this.dialog.open(LogoutModalComponent, {
+      width: "400px"
+    })
+  }
+
+  openInfoModal() {
+    this.dialog.open(InfoModalComponent, {
+      width: "400px"
+    })
+  }
 }

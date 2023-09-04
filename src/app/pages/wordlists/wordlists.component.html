@@ -3,11 +3,8 @@
         <mat-nav-list *ngFor="let lists of wordLists(wordListsNode)">
             <div mat-subheader>{{ "Created in " + formatDate(lists[0].createdAt) }}</div>
             <mat-list-item *ngFor="let list of lists" [routerLink]="['/lists', list.id]">
-                <mat-icon matListItemAvatar>
-                    <img src="https://picsum.photos/200/300">
-                </mat-icon>
-                <span matListItemTitle>{{list.name}}</span>
-                <span matListItemLine>{{list.description + " · " + list.wordCount + " words" }}</span>
+                <span matListItemTitle>{{ list.name }}</span>
+                <span matListItemLine>{{ list.description + " · " + list.wordCount + " words" }}</span>
                 <div matListItemMeta class="z-40">
                     <button mat-icon-button color="primary" class="mt-1" [matMenuTriggerFor]="menu"
                         (click)="$event.stopPropagation()">
