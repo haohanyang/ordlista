@@ -41,6 +41,7 @@ import { AddWordSheetComponent } from "./components/add-word-sheet/add-word-shee
 import { SettingsComponent } from "./pages/settings/settings.component"
 import { DiscoverComponent } from "./pages/discover/discover.component"
 import { LogoutModalComponent } from "./components/logout-modal/logout-modal.component"
+import { MatTableModule } from '@angular/material/table'
 import AuthService from "./auth.service"
 import HttpService from "./http.service"
 import { HttpRequestInterceptor } from "./http.interceptor"
@@ -62,6 +63,7 @@ import { HttpRequestInterceptor } from "./http.interceptor"
         MatMenuModule, MatDividerModule, MatListModule,
         MatProgressSpinnerModule, MatDialogModule, MatSnackBarModule,
         MatCardModule, MatExpansionModule, MatBottomSheetModule,
+        MatTableModule,
         ServiceWorkerModule.register("ngsw-worker.js", {
             enabled: !isDevMode(),
             // Register the ServiceWorker as soon as the application is stable

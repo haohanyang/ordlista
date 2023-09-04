@@ -24,6 +24,9 @@ export class WordlistComponent implements OnInit {
   words$ = new BehaviorSubject<Word[] | null>(null)
   fetchingWordsError: string | null = null
 
+  tableView = false
+  displayedColumns: string[] = ['swedishWord', 'translation'];
+
   @ViewChild("listBottom") listBottom?: ElementRef
   @ViewChild("listTop") listTop?: ElementRef
 
