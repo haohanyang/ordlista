@@ -10,6 +10,9 @@ interface ImportMetaEnv {
   readonly NG_APP_COGNITO_USER_POOL_CLIENT_ID: string
   readonly NG_APP_COGNITO_USER_POOL_ID: string
   readonly NG_APP_API_BASE_URL: string
+  readonly NG_APP_COMMIT_HASH: string
+  readonly NG_APP_COMMIT_HASH_SHORT: string
+  readonly NG_APP_COMMIT_BRANCH: string
   // Add your environment variables below
   // readonly NG_APP_API_URL: string;
   [key: string]: any

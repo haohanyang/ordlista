@@ -9,13 +9,10 @@
         <textarea matInput formControlName="description"></textarea>
     </mat-form-field>
 </form>
-<div mat-dialog-actions>
-    <div class="ml-auto">
-        <button mat-stroked-button type="button" class="w-24" [mat-dialog-close]="true" cdkFocusInitial>Cancel</button>
-        <button mat-flat-button color="primary" type="submit" form="save-list-form" class="w-24"
-            [disabled]="isRequesting">
-            <mat-spinner *ngIf="isRequesting" diameter="20"></mat-spinner>
-            <span *ngIf="!isRequesting">Save</span>
-        </button>
-    </div>
+<div mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" class="w-24" [mat-dialog-close]="true">Cancel</button>
+    <button mat-flat-button color="primary" type="submit" form="save-list-form" class="w-24" [disabled]="isRequesting">
+        <mat-spinner *ngIf="isRequesting" diameter="20"></mat-spinner>
+        <span *ngIf="!isRequesting">Save</span>
+    </button>
 </div>

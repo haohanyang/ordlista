@@ -44,7 +44,8 @@ import { LogoutModalComponent } from "./components/logout-modal/logout-modal.com
 import { MatTableModule } from '@angular/material/table'
 import AuthService from "./auth.service"
 import HttpService from "./http.service"
-import { HttpRequestInterceptor } from "./http.interceptor"
+import { HttpRequestInterceptor } from "./http.interceptor";
+import { InfoModalComponent } from './components/info-modal/info-modal.component'
 @NgModule({
     declarations: [
         AppComponent, HomeComponent, WordlistsComponent, WordlistComponent, WordCardComponent,
@@ -52,7 +53,7 @@ import { HttpRequestInterceptor } from "./http.interceptor"
         SearchResultEntryComponent, SaveWordModalComponent,
         BottomBarComponent, NotFoundPageComponent, SignUpComponent,
         SignUpComponent, LogInComponent, TopNavComponent,
-        AddWordSheetComponent, SettingsComponent, DiscoverComponent, LogoutModalComponent
+        AddWordSheetComponent, SettingsComponent, DiscoverComponent, LogoutModalComponent, InfoModalComponent
     ],
     imports: [
         BrowserModule, AppRoutingModule, BrowserAnimationsModule,

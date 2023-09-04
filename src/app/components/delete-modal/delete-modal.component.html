@@ -9,12 +9,10 @@
         ?
     </p>
 </div>
-<div mat-dialog-actions>
-    <div class="ml-auto">
-        <button type="button" mat-flat-button color="warn" (click)="deleteData()" [disabled]="isRequesting">
-            <span *ngIf="!isRequesting">Yes</span>
-            <mat-spinner *ngIf="isRequesting" diameter="20"></mat-spinner>
-        </button>
-        <button type="button" mat-stroked-button [mat-dialog-close]="true">No</button>
-    </div>
+<div mat-dialog-actions align="end">
+    <button type="button" mat-flat-button color="warn" (click)="deleteData()" [disabled]="isRequesting">
+        <span *ngIf="!isRequesting">Yes</span>
+        <mat-spinner *ngIf="isRequesting" diameter="20"></mat-spinner>
+    </button>
+    <button type="button" mat-stroked-button [mat-dialog-close]="true">No</button>
 </div>

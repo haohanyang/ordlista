@@ -65,12 +65,10 @@
         </div>
     </div>
 </form>
-<div mat-dialog-actions>
-    <div class="ml-auto">
-        <button mat-stroked-button type="button" mat-dialog-close class="w-24">Cancel</button>
-        <button mat-flat-button type="submit" color="primary" form="save-word-form" [disabled]="isSaving" class="w-24">
-            <span *ngIf="!isSaving">Save</span>
-            <mat-spinner *ngIf="isSaving" diameter="20"></mat-spinner>
-        </button>
-    </div>
+<div mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" mat-dialog-close class="w-24">Cancel</button>
+    <button mat-flat-button type="submit" color="primary" form="save-word-form" [disabled]="isSaving" class="w-24">
+        <span *ngIf="!isSaving">Save</span>
+        <mat-spinner *ngIf="isSaving" diameter="20"></mat-spinner>
+    </button>
 </div>

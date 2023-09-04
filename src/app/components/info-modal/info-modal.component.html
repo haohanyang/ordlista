@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>About ordlista</h2>
+<mat-dialog-content>
+    <mat-list>
+        <mat-list-item>
+            <span matListItemTitle>Version</span>
+            <span matListItemLine>{{appVersion}}</span>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>GitHub Repo</span>
+            <a matListItemLine href="http://github.com/haohanyang/ordlista" target="_blank">haohanyang/ordlista</a>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>Branch</span>
+            <a matListItemLine target="_blank" [href]="branchUrl">{{ commitBranch }}</a>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>Commit SHA</span>
+            <a matListItemLine target="_blank" [href]="commitUrl">{{ commitHashShort }}</a>
+        </mat-list-item>
+    </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

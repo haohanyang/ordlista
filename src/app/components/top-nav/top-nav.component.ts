@@ -5,6 +5,7 @@ import { Router } from "@angular/router"
 import AuthService from "src/app/auth.service"
 import { LogoutModalComponent } from "../logout-modal/logout-modal.component"
 import HttpService from "src/app/http.service"
+import { InfoModalComponent } from "../info-modal/info-modal.component"
 
 @Component({
     selector: "app-top-nav",
@@ -32,6 +33,12 @@ export class TopNavComponent {
 
     openLogoutModal() {
         this.dialog.open(LogoutModalComponent, {
+            width: "400px"
+        })
+    }
+
+    openInfoModal() {
+        this.dialog.open(InfoModalComponent, {
             width: "400px"
         })
     }

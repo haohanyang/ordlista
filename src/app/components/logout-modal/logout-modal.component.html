@@ -2,9 +2,7 @@
 <div mat-dialog-content>
     <p>Do you confirm to log out?</p>
 </div>
-<div mat-dialog-actions>
-    <div class="ml-auto">
-        <button mat-flat-button color="warn" (click)="logOut()" class="w-24">Log out</button>
-        <button mat-flat-button mat-dialog-close class="w-24">Cancel</button>
-    </div>
+<div mat-dialog-actions align="end">
+    <button mat-flat-button color="warn" (click)="logOut()" class="w-24">Log out</button>
+    <button mat-flat-button mat-dialog-close class="w-24">Cancel</button>
 </div>
