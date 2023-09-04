@@ -1,19 +1,30 @@
 <div class="bs-container pt-24">
     <div *ngIf="(wordLists$ | async) as wordListsNode; else loadingOrError">
-        <mat-action-list *ngFor="let lists of wordLists(wordListsNode)">
+        <mat-nav-list *ngFor="let lists of wordLists(wordListsNode)">
             <div mat-subheader>{{ "Created in " + formatDate(lists[0].createdAt) }}</div>
             <mat-list-item *ngFor="let list of lists" [routerLink]="['/lists', list.id]">
                 <mat-icon matListItemAvatar>
                     <img src="https://picsum.photos/200/300">
                 </mat-icon>
-                <div matListItemTitle>{{list.name}}</div>
-                <div matListItemLine>{{list.description }}</div>
-                <div matListItemMeta>
-                    <span>{{list.wordCount + " ord" }}</span>
+                <span matListItemTitle>{{list.name}}</span>
+                <span matListItemLine>{{list.description + " · " + list.wordCount + " words" }}</span>
+                <div matListItemMeta class="z-40">
+                    <button mat-icon-button color="primary" class="mt-1" [matMenuTriggerFor]="menu"
+                        (click)="$event.stopPropagation()">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item [routerLink]="['/lists', list.id]">
+                            <mat-icon>
+                                arrow_outward
+                            </mat-icon>To list</button>
+                    </mat-menu>
                 </div>
             </mat-list-item>
-        </mat-action-list>
-        <div class="bs-container fixed bottom-32">
+        </mat-nav-list>
+        <div class="h-32">
+        </div>
+        <div class="bs-container fixed bottom-32 h-0">
             <button mat-fab matTooltip="Create new list" (click)="openCreateListModal()">
                 <mat-icon>add</mat-icon>
             </button>
