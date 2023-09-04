@@ -1,2 +1,8 @@
-<app-top-nav></app-top-nav>
-<router-outlet></router-outlet>
+<div *ngIf="(auth.authenticationTrigger$ | async) === null; else main">
+    <mat-spinner diameter="30" class="mx-auto mt-24"></mat-spinner>
+</div>
+
+<ng-template #main>
+    <app-top-nav></app-top-nav>
+    <router-outlet></router-outlet>
+</ng-template>

@@ -34,6 +34,7 @@ jobs:
         echo "NG_APP_COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID" > .env
         echo "NG_APP_COGNITO_USER_POOL_CLIENT_ID=$COGNITO_USER_POOL_CLIENT_ID" >> .env
         echo "NG_APP_API_BASE_URL=$API_BASE_URL" >> .env
+        echo "NG_APP_ENV=test" >> .env
       env:
         COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
         COGNITO_USER_POOL_CLIENT_ID: ${{ secrets.COGNITO_USER_POOL_CLIENT_ID }}

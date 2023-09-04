@@ -16,7 +16,7 @@ export default class HttpService {
   }
 
   getUserProfile$(userId: string) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.get<{ user: User }>(`${this.baseUrl}/users/${userId}/profile`, {
         headers: {
           Authorization: idToken
@@ -26,7 +26,7 @@ export default class HttpService {
   }
 
   getList$(listId: string) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.get<{ list: WordList }>(`${this.baseUrl}/lists/${listId}`, {
         headers: {
           Authorization: idToken
@@ -36,7 +36,7 @@ export default class HttpService {
   }
 
   getLists$(userId: string) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.get<{ lists: WordList[] }>(`${this.baseUrl}/users/${userId}/lists`, {
         headers: {
           Authorization: idToken
@@ -46,7 +46,7 @@ export default class HttpService {
   }
 
   createList$(list: WordList) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.post<{ list: WordList }>(`${this.baseUrl}/lists`, list, {
         headers: {
           Authorization: idToken
@@ -56,7 +56,7 @@ export default class HttpService {
   }
 
   deleteList$(listId: string) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.delete<{ message: string }>(`${this.baseUrl}/lists/${listId}`, {
         headers: {
           Authorization: idToken
@@ -66,7 +66,7 @@ export default class HttpService {
   }
 
   updateList$(list: WordList) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.patch<{ list: WordList }>(`${this.baseUrl}/lists/${list.id}`, list, {
         headers: {
           Authorization: idToken
@@ -76,7 +76,7 @@ export default class HttpService {
   }
 
   getWords$(listId: string) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.get<{ words: Word[] }>(`${this.baseUrl}/lists/${listId}/words`, {
         headers: {
           Authorization: idToken
@@ -86,7 +86,7 @@ export default class HttpService {
   }
 
   createWord$(word: Word) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.post<{ word: Word }>(`${this.baseUrl}/words`, word, {
         headers: {
           Authorization: idToken
@@ -96,7 +96,7 @@ export default class HttpService {
   }
 
   updateWord$(word: Word) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.patch<{ word: Word }>(`${this.baseUrl}/words/${word.id}`, word, {
         headers: {
           Authorization: idToken
@@ -106,7 +106,7 @@ export default class HttpService {
   }
 
   deleteWord$(wordId: string) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.delete<{ message: string }>(`${this.baseUrl}/words/${wordId}`, {
         headers: {
           Authorization: idToken
@@ -116,7 +116,7 @@ export default class HttpService {
   }
 
   searchWord$(keyword: string) {
-    return this.authService.idTokenSubject$.pipe(switchMap(idToken =>
+    return this.authService.idToken$.pipe(switchMap(idToken =>
       this.http.post<{ result: Word[] }>(`${this.baseUrl}/search`, {
         "keyword": keyword
       }, {

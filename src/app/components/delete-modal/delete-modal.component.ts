@@ -43,8 +43,9 @@ export class DeleteModalComponent {
       this.isRequesting = true
       this.httpService.deleteWord$(this.data.dataId).subscribe({
         next: _result => {
-          this.data.onSuccessCallback(this.data.dataId!),
-            this.isRequesting = false
+          this.dialogRef.close()
+          this.data.onSuccessCallback(this.data.dataId!)
+          this.isRequesting = false
         },
         error: err => {
           this.snackBar.open("Failed to delete the word", "Close", {

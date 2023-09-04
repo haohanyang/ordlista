@@ -8,15 +8,13 @@ import { Observable, from, tap, map, catchError, of, BehaviorSubject } from "rxj
 })
 export default class AuthService {
   userIdSubject$ = new BehaviorSubject<string | null>(null)
-  idTokenSubject$ = new BehaviorSubject<string>("")
-  private readonly authenticationTrigger$ =
+
+  readonly authenticationTrigger$ =
     from(Auth.currentAuthenticatedUser()).pipe(
       tap((e) => {
         this.userIdSubject$.next(e.username)
-        this.idTokenSubject$.next(e.signInUserSession.getIdToken().getJwtToken())
       }),
       catchError(_error => {
-        console.log(_error)
         return of(null)
       })
     )
@@ -25,16 +23,11 @@ export default class AuthService {
     map(result => !!result)
   )
 
+  readonly idToken$ = from(Auth.currentSession()
+    .then(result => result.getIdToken().getJwtToken()).catch(_error => ""))
+
   readonly userId$ = this.authenticationTrigger$.pipe(
     map(result => result ? result.username as string : null),
-  )
-
-  readonly idToken$ = from(Auth.currentSession()).pipe(
-    map(result => result.getIdToken().getJwtToken()),
-    catchError(_error => {
-      console.log(_error)
-      return of("")
-    })
   )
 
   constructor(private router: Router) { }
@@ -58,7 +51,6 @@ export default class AuthService {
       .pipe(
         tap((e) => {
           this.userIdSubject$.next(e.username)
-          this.idTokenSubject$.next(e.signInUserSession.getIdToken().getJwtToken())
         })
       )
   }
@@ -66,7 +58,7 @@ export default class AuthService {
   logOut(): Observable<any> {
     return from(Auth.signOut()).pipe(tap(() => {
       this.userIdSubject$.next(null)
-      this.idTokenSubject$.next("")
+      // this.idTokenSubject$.next("")
       this.router.navigate(["/"])
     }))
   }
