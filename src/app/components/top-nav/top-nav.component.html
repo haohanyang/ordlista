@@ -5,15 +5,11 @@
         </button>
         <span>{{ title }}</span>
         <span class="grow shrink basis-auto"></span>
-        <ng-container *ngIf="(userProfile$ | async) as user; else loginButtons">
+        <ng-container *ngIf="(auth.userIdSubject$ | async) as userId; else loginButtons">
             <button mat-icon-button [matMenuTriggerFor]="menu">
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item>
-                    <img src={{user.avatar}} class="w-8 h-8 rounded-full mr-2 inline">
-                    <span>{{ "@" + user.username }}</span>
-                </button>
                 <button mat-menu-item>
                     <mat-icon>settings</mat-icon>
                     <span>Settings</span>

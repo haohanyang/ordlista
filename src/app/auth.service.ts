@@ -23,10 +23,6 @@ export default class AuthService {
     map(result => !!result)
   )
 
-  readonly idToken$ = from(Auth.currentSession()
-    .then(result => result.getIdToken().getJwtToken()).catch(_error => ""))
-    .pipe()
-
   readonly userId$ = this.authenticationTrigger$.pipe(
     map(result => result ? result.username as string : null),
   )
@@ -59,7 +55,6 @@ export default class AuthService {
   logOut(): Observable<any> {
     return from(Auth.signOut()).pipe(tap(() => {
       this.userIdSubject$.next(null)
-      // this.idTokenSubject$.next("")
       this.router.navigate(["/"])
     }))
   }

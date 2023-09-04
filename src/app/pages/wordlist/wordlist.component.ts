@@ -133,7 +133,6 @@ export class WordlistComponent implements OnInit {
   }
 
   onListDeleted() {
-    // this.dialog.closeAll()
     this.router.navigate(["/my-lists"])
   }
 }

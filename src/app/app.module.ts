@@ -15,7 +15,7 @@ import { WordlistsComponent } from "./pages/wordlists/wordlists.component"
 import { WordlistComponent } from "./pages/wordlist/wordlist.component"
 import { WordCardComponent } from "./components/word-card/word-card.component"
 import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular"
-import { HttpClientModule } from "@angular/common/http"
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http"
 import { TopNavComponent } from "./components/top-nav/top-nav.component"
 import { SaveListModalComponent } from "./components/save-list-modal/save-list-modal.component"
 import { DeleteModalComponent } from "./components/delete-modal/delete-modal.component"
@@ -43,6 +43,7 @@ import { DiscoverComponent } from "./pages/discover/discover.component"
 import { LogoutModalComponent } from "./components/logout-modal/logout-modal.component"
 import AuthService from "./auth.service"
 import HttpService from "./http.service"
+import { HttpRequestInterceptor } from "./http.interceptor"
 @NgModule({
     declarations: [
         AppComponent, HomeComponent, WordlistsComponent, WordlistComponent, WordCardComponent,
@@ -68,7 +69,9 @@ import HttpService from "./http.service"
             registrationStrategy: "registerWhenStable:30000"
         })
     ],
-    providers: [HttpService, AuthService],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
+        HttpService, AuthService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
