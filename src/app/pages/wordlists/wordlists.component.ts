@@ -1,16 +1,15 @@
 import { Component, OnInit } from "@angular/core"
 import HttpService from "../../http.service"
 import { WordList } from "../../models/wordlist"
-import { Observable, catchError, map, of, switchMap } from "rxjs"
 import { Router } from "@angular/router"
 import { MatDialog } from "@angular/material/dialog"
 import { SaveListModalComponent, SaveListModalData } from "src/app/components/save-list-modal/save-list-modal.component"
-import * as moment from "moment"
+import moment from "moment"
 import AuthService from "src/app/auth.service"
 
 class WordListGroupNode {
 
-  isHeader: boolean = false
+  isHeader: boolean
   date: moment.Moment
   lists: WordList[]
   next: WordListGroupNode | null
@@ -38,8 +37,9 @@ class WordListGroupNode {
   templateUrl: "./wordlists.component.html",
 })
 export class WordlistsComponent implements OnInit {
-  fetchingError: string | null = null
-  wordLists$: Observable<WordListGroupNode | null>
+  isFetchingLists = false
+  fetchingListsError: string | null = null
+  head: WordListGroupNode | null = null
 
   constructor(public auth: AuthService, private router: Router,
     private httpService: HttpService, private dialog: MatDialog) {
@@ -47,9 +47,14 @@ export class WordlistsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.wordLists$ = this.auth.userIdSubject$.pipe(
-      switchMap(userId => this.httpService.getLists$(userId!)),
-      map(result => {
+    const userId = this.auth.userIdSubject$.value
+    if (!userId) {
+      this.router.navigate(["/login"])
+      return
+    }
+    this.isFetchingLists = true
+    this.httpService.getLists$(userId).subscribe({
+      next: result => {
         const wordLists = result.lists
         let header: WordListGroupNode = WordListGroupNode.dummy()
         let cur: WordListGroupNode = header
@@ -61,14 +66,15 @@ export class WordlistsComponent implements OnInit {
             cur = cur.next
           }
         }
-        return header
-      }),
-      catchError(err => {
-        this.fetchingError = "Failed to load word lists"
-        console.log(err)
-        return of(null)
-      })
-    )
+        this.head = header
+        this.isFetchingLists = false
+      },
+      error: error => {
+        this.fetchingListsError = "Failed to load word lists"
+        console.log(error)
+        this.isFetchingLists = false
+      }
+    })
   }
 
   formatDate(date: string) {
@@ -101,6 +107,17 @@ export class WordlistsComponent implements OnInit {
   }
 
   onNewListCreated(list: WordList) {
-    this.router.navigate(["/lists", list.id])
+    if (this.head) {
+      let next = this.head.next
+      // Check if the list is in the same month as the first list in the node
+      if (next && next.date.isSame(list.createdAt, "month")) {
+        next.lists.unshift(list)
+      } else {
+        // Create a new node
+        const cur = new WordListGroupNode(list)
+        cur.next = this.head.next
+        this.head.next = cur
+      }
+    }
   }
 }

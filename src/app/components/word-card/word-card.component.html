@@ -1,9 +1,9 @@
 <mat-card appearance="outlined">
-    <mat-card-header class="bg-teal-200">
+    <mat-card-header class="bg-teal-100">
         <mat-card-title>{{ word.swedishWord }}</mat-card-title>
         <mat-card-subtitle>{{ word.category }}</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content class="bg-teal-200">
+    <mat-card-content class="bg-teal-100">
         <p class="text-lg">
             {{word.translation}}
         </p>
@@ -18,7 +18,7 @@
             </ul>
         </div>
     </mat-card-content>
-    <mat-card-actions class="justify-between bg-teal-200 items-center">
+    <mat-card-actions class="justify-between items-center bg-teal-100">
         <div>
             <button mat-button (click)="openSaveWordModal()">EDIT</button>
             <button mat-button color="warn" (click)="openDeleteWordModal()">DELETE</button>

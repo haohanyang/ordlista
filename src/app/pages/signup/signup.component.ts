@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core"
+import { Component } from "@angular/core"
 import { FormControl, FormGroup, Validators } from "@angular/forms"
 import { MatSnackBar } from "@angular/material/snack-bar"
 import { Router } from "@angular/router"
@@ -49,8 +49,8 @@ export class SignUpComponent {
       .subscribe({
         next: result => {
           this.accountCreated = true
-          this.maskedEmail = result.codeDeliveryDetails.Destination
-          this.router.navigate(["/login"])
+          this.maskedEmail = result.codeDeliveryDetails?.Destination || ""
+          this.isSigningUp = false
         },
         error: error => {
           console.log(error)
@@ -60,9 +60,10 @@ export class SignUpComponent {
             horizontalPosition: "center",
             verticalPosition: "top",
           })
+          this.isSigningUp = false
         },
         complete: () => {
-          this.isSigningUp = false
+          this.router.navigate(["/login"])
         }
       })
   }
@@ -72,6 +73,7 @@ export class SignUpComponent {
     this.auth.confirmSignUp(this.email.value, this.confirmationCode.value)
       .subscribe({
         next: _result => {
+          this.isConfirming = true
           this.router.navigate(["/login"])
         }, error: error => {
           console.log(error)
@@ -81,8 +83,7 @@ export class SignUpComponent {
             horizontalPosition: "center",
             verticalPosition: "top",
           })
-        }, complete: () => {
-          this.isConfirming = false
+          this.isConfirming = true
         }
       })
   }

@@ -6,7 +6,7 @@ import { catchError, map, of } from "rxjs"
 
 export interface WordListResolverResult {
     data: WordList | null
-    error: any
+    error: string | null
 }
 
 export const wordlistResolver: ResolveFn<WordListResolverResult> = (route: ActivatedRouteSnapshot) => {
@@ -21,7 +21,7 @@ export const wordlistResolver: ResolveFn<WordListResolverResult> = (route: Activ
             console.log(error)
             return of({
                 data: null,
-                error: error
+                error: "Failed to load the list"
             })
         })
     )

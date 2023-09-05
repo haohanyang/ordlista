@@ -8,6 +8,7 @@ import { MatIconModule } from "@angular/material/icon"
 import { MatTooltipModule } from "@angular/material/tooltip"
 import { MatButtonModule } from "@angular/material/button"
 import { MatMenuModule } from "@angular/material/menu"
+import { MatChipsModule } from "@angular/material/chips"
 import { MatTabsModule } from "@angular/material/tabs"
 import { AppComponent } from "./app.component"
 import { HomeComponent } from "./pages/home/home.component"
@@ -65,7 +66,7 @@ import { InstallPwaPromptComponent } from './components/install-pwa-prompt/insta
         MatMenuModule, MatDividerModule, MatListModule,
         MatProgressSpinnerModule, MatDialogModule, MatSnackBarModule,
         MatCardModule, MatExpansionModule, MatBottomSheetModule,
-        MatTableModule,
+        MatTableModule, MatChipsModule,
         ServiceWorkerModule.register("ngsw-worker.js", {
             enabled: !isDevMode(),
             // Register the ServiceWorker as soon as the application is stable

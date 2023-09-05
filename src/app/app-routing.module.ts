@@ -14,7 +14,7 @@ import { SettingsComponent } from "./pages/settings/settings.component"
 const routes: Routes = [
   {
     path: "",
-    title: "Ordlista",
+    title: "Home",
     component: HomeComponent
   },
   {
@@ -29,12 +29,13 @@ const routes: Routes = [
   },
   {
     path: "my-lists",
-    title: "My lists",
+    title: "My Word Lists",
     component: WordlistsComponent,
     canActivate: [authGuard]
   },
   {
     path: "lists/:id",
+    title: "Word List",
     component: WordlistComponent,
     canActivate: [authGuard],
     resolve: {
