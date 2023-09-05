@@ -3,15 +3,14 @@ import { User } from "./models/user"
 import { WordList } from "./models/wordlist"
 import { Word } from "./models/word"
 import { HttpClient } from "@angular/common/http"
-import AuthService from "./auth.service"
 
 @Injectable({
   providedIn: "root"
 })
 export default class HttpService {
-  private baseUrl: string
+  private readonly baseUrl: string
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient) {
     this.baseUrl = import.meta.env.NG_APP_API_BASE_URL
   }
 
