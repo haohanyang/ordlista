@@ -2,7 +2,7 @@
 </div>
 <div class="bs-container">
     <button *ngIf="!fetchingListsError" mat-fab matTooltip="Create new list" (click)="openCreateListModal()"
-        style="margin-top: -30px;">
+        style="margin-top: -32px;">
         <mat-icon>add</mat-icon>
     </button>
     <mat-spinner *ngIf="isFetchingLists; else listsOrError" diameter="30" role="status"
