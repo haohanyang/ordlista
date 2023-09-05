@@ -19,7 +19,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isCheckingAuth = true
-    this.authSubscription$ = this.auth.authenticationTrigger$.subscribe(() => {
+    this.authSubscription$ = this.auth.authenticationTrigger$.subscribe(user => {
+      if (user) {
+        this.auth.userIdSubject$.next(user.username as string)
+      }
       this.isCheckingAuth = false
     })
 

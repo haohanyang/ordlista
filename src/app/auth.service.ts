@@ -11,9 +11,6 @@ export default class AuthService {
 
   readonly authenticationTrigger$ =
     from(Auth.currentAuthenticatedUser()).pipe(
-      tap((e) => {
-        this.userIdSubject$.next(e.username as string)
-      }),
       catchError(_error => {
         return of(null)
       })
