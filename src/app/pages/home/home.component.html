@@ -1,16 +1,11 @@
-<div *ngIf="!userId" class="container">
-    <section class="section">
-        <div class="notification is-link is-light">
-            Du måste logga in för att se dina listor.
-        </div>
-    </section>
+<div *ngIf="(auth.userIdSubject$ | async) ;else noAuth">
+    <div class="bs-container pt-24">
+        <h1 class="text-2xl">Welcome back</h1>
+    </div>
+    <app-bottom-nav></app-bottom-nav>
 </div>
-
-<div *ngIf="userId" class="container">
-    <section class="section">
-        <h2 class="is-size-3">Senaste ordlistor</h2>
-    </section>
-    <section class="section">
-        <h2 class="is-size-3">Senaste ord</h2>
-    </section>
-</div>
+<ng-template #noAuth>
+    <div class="bs-container pt-24">
+        <h1 class="text-2xl">Please log in</h1>
+    </div>
+</ng-template>

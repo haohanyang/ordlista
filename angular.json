@@ -32,7 +32,8 @@
                             "src/_redirects"
                         ],
                         "styles": [
-                            "src/styles.scss"
+                            "src/styles.scss",
+                            "src/theme.scss"
                         ],
                         "scripts": [],
                         "serviceWorker": true,
@@ -93,7 +94,8 @@
                             "src/assets"
                         ],
                         "styles": [
-                            "src/styles.scss"
+                            "src/styles.scss",
+                            "src/theme.scss"
                         ],
                         "scripts": []
                     }

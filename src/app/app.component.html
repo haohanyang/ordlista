@@ -1,81 +1,8 @@
-<header class="container">
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-item" [routerLink]="['/']">
-        <img src="/assets/android-chrome-512x512.png" width="28" height="28">
-      </a>
-      <button type="button" role="button" class="navbar-burger no-border is-left" aria-label="menu"
-        aria-expanded="false" [ngClass]="menuActive ? 'is-active' : ''" (click)="menuActive = !menuActive">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </button>
-    </div>
-    <div class="navbar-menu" [ngClass]="menuActive ? 'is-active' : ''">
-      <div class="navbar-start">
-        <a [routerLink]="['']" class="navbar-item">
-          Hem
-        </a>
-        <a [routerLink]="['om-oss']" class="navbar-item">
-          Om oss
-        </a>
-        <a *ngIf="user" [routerLink]="['mina-listor']" class="navbar-item">
-          Mina listor
-        </a>
-      </div>
+<div *ngIf="isCheckingAuth; else main">
+    <mat-spinner diameter="30" class="mx-auto mt-24"></mat-spinner>
+</div>
 
-      <div class="navbar-end">
-        <div *ngIf="!user" class="navbar-item">
-          <a class="button is-primary" [routerLink]="['auth']">
-            <strong>Logga in</strong>
-          </a>
-        </div>
-
-        <div *ngIf="user" class="navbar-item">
-          <div class="dropdown" [ngClass]="[userDropdownActive ? 'is-active' : '', menuActive ? 'is-left':'is-right']">
-            <div class="dropdown-trigger">
-              <button class="button no-border" aria-haspopup="true" aria-controls="dropdown-menu"
-                (click)="userDropdownActive = !userDropdownActive">
-                <figure class="image is-32x32">
-                  <img class="is-rounded" src="{{ user.avatar }}">
-                </figure>
-                <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-              </button>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                <a href="#" class="dropdown-item">
-                  {{"@" + user.username}}
-                </a>
-                <a [routerLink]="['mina-listor']" class="dropdown-item">
-                  Mina listor
-                </a>
-                <hr class="dropdown-divider">
-                <div class="dropdown-item">
-                  <button class="button" type="button" (click)="signOut()" [ngClass]="isSigningOut ? 'is-loading' : ''">
-                    Logga ut
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<ng-template [ngIf]="isResolvingRoute">
-  <div class="modal is-active">
-    <div class="modal-background"></div>
-    <div class="modal-content is-flex is-justify-content-center">
-      <span class="loader"></span>
-    </div>
-  </div>
+<ng-template #main>
+    <app-top-nav></app-top-nav>
+    <router-outlet></router-outlet>
 </ng-template>
-
-<main role="main" class="has-background-light">
-  <router-outlet></router-outlet>
-</main>

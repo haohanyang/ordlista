@@ -1,41 +1,43 @@
-<div class="container" *ngIf="!userId else authPage">
-    <section class="section">
-        <div class="notification is-warning">
-            Du måste logga in.
-        </div>
-    </section>
+<div class="bg-teal-600 h-32">
 </div>
-<ng-template #authPage>
-    <div class="container">
-
-        <section class="section">
-            <div class="is-flex is-justify-content-space-between is-align-items-center">
-                <h2 class="is-size-3">Mina ordlistor</h2>
-                <button class="button is-primary" *ngIf="wordLists" (click)="createNewListModalOpen = true">
-                    Ny lista
-                </button>
-            </div>
-        </section>
-
-        <section class="section py-0">
-            <div *ngIf="fetchingListsError; else fetchingTemplate" class="notification is-danger" role="alert">
-                {{ fetchingListsError }}
-            </div>
-
-            <ng-template #fetchingTemplate>
-                <div *ngIf="isFetchingLists else listTemplate" role="status" class="is-flex is-justify-content-center">
-                    <span class="loader"></span>
-                </div>
-                <ng-template #listTemplate>
-                    <div *ngIf="wordLists" class="columns is-multiline">
-                        <app-word-list-card *ngFor="let list of wordLists"
-                            class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd"
-                            [list]="list"></app-word-list-card>
+<div class="bs-container">
+    <button *ngIf="!fetchingListsError" mat-fab matTooltip="Create new list" (click)="openCreateListModal()"
+        style="margin-top: -32px;">
+        <mat-icon>add</mat-icon>
+    </button>
+    <mat-spinner *ngIf="isFetchingLists; else listsOrError" diameter="30" role="status"
+        class="mx-auto mt-3"></mat-spinner>
+    <ng-template #listsOrError>
+        <div *ngIf="fetchingListsError" class="text-gray-500 flex justify-center mt-3">
+            <mat-icon class="block mr-1">error</mat-icon>
+            <span class="block"> {{ fetchingListsError }}</span>
+        </div>
+        <ng-container *ngIf="head">
+            <mat-nav-list *ngFor="let lists of wordLists(head)">
+                <div mat-subheader>{{ "Created in " + formatDate(lists[0].createdAt) }}</div>
+                <mat-list-item *ngFor="let list of lists" [routerLink]="['/lists', list.id]">
+                    <span matListItemIcon>
+                        <mat-icon>list_alt</mat-icon>
+                    </span>
+                    <span matListItemTitle>{{ list.name }}</span>
+                    <span matListItemLine>{{ list.description + " · " + list.wordCount + " words" }}</span>
+                    <div matListItemMeta class="z-40">
+                        <button mat-icon-button color="primary" class="mt-1" [matMenuTriggerFor]="menu"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item [routerLink]="['/lists', list.id]">
+                                <mat-icon>
+                                    arrow_outward
+                                </mat-icon>To list</button>
+                        </mat-menu>
                     </div>
-                </ng-template>
-                <app-save-list-modal [isActive]="createNewListModalOpen" [closeCallback]="closeCreateListModal"
-                    [onSuccessCallback]="onNewListCreated" [userId]="this.userId"></app-save-list-modal>
-            </ng-template>
-        </section>
-    </div>
-</ng-template>
+                </mat-list-item>
+            </mat-nav-list>
+            <div class="h-32">
+            </div>
+        </ng-container>
+    </ng-template>
+</div>
+<app-bottom-nav></app-bottom-nav>

@@ -1,43 +1,63 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 import { HomeComponent } from "./pages/home/home.component"
-import { AuthComponent } from "./pages/auth/auth.component"
 import { WordlistComponent } from "./pages/wordlist/wordlist.component"
 import { WordlistsComponent } from "./pages/wordlists/wordlists.component"
-import { authResolver } from "./auth.resolver"
 import { wordlistResolver } from "./pages/wordlist/wordlist.resolve"
-import { AboutComponent } from "./pages/about/about.component"
+import { NotFoundPageComponent } from "./pages/not-found-page/not-found-page.component"
+import { LogInComponent } from "./pages/login/login.component"
+import { SignUpComponent } from "./pages/signup/signup.component"
+import { authGuard } from "./auth.guard"
+import { DiscoverComponent } from "./pages/discover/discover.component"
+import { SettingsComponent } from "./pages/settings/settings.component"
 
 const routes: Routes = [
   {
     path: "",
-    title: "Hem",
+    title: "Home",
     component: HomeComponent
   },
   {
-    path: "om-oss",
-    title: "Om oss",
-    component: AboutComponent
+    path: "login",
+    title: "Log in",
+    component: LogInComponent
   },
   {
-    path: "auth",
-    title: "Logga in",
-    component: AuthComponent
+    path: "signup",
+    title: "Sign up",
+    component: SignUpComponent
   },
   {
-    path: "mina-listor",
-    title: "Mina listor",
+    path: "my-lists",
+    title: "My Word Lists",
     component: WordlistsComponent,
-    resolve: { userId: authResolver }
+    canActivate: [authGuard]
   },
   {
-    path: "lista/:id",
-    title: "Lista",
+    path: "lists/:id",
+    title: "Word List",
     component: WordlistComponent,
+    canActivate: [authGuard],
     resolve: {
-      userId: authResolver,
-      listInfo: wordlistResolver
+      listResult: wordlistResolver
     }
+  },
+  {
+    path: "discover",
+    title: "Discover",
+    component: DiscoverComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: "settings",
+    title: "Settings",
+    component: SettingsComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: "**",
+    title: "Not found",
+    component: NotFoundPageComponent
   }
 ]
 

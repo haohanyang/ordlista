@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>About Ordlista</h2>
+<mat-dialog-content>
+    <mat-list>
+        <mat-list-item>
+            <span matListItemTitle>Version</span>
+            <span matListItemLine>{{appVersion}}</span>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>GitHub Repo</span>
+            <a matListItemLine href="http://github.com/haohanyang/ordlista" target="_blank">haohanyang/ordlista</a>
+        </mat-list-item>
+        <ng-container *ngIf="(branchInfo$ | async) as branchInfo">
+            <mat-list-item>
+                <span matListItemTitle>Branch</span>
+                <a matListItemLine target="_blank" [href]="branchInfo._links.html">{{ branchInfo.name }}</a>
+            </mat-list-item>
+            <mat-list-item *ngIf="(commitInfo$ | async) as commitInfo">
+                <span matListItemTitle>Commit SHA</span>
+                <a matListItemLine target="_blank" [href]="commitInfo.html_url">{{ commitInfo.sha.substring(0, 7) }}</a>
+                <span matListItemLine *ngIf="branchInfo.commit.sha === commitHash" style="color: green;">Up-to-date in
+                    the current branch</span>
+                <span matListItemLine *ngIf="branchInfo.commit.sha !== commitHash" class="text-green-500">
+                    <a target="_blank" [href]="branchInfo.commit.html_url" class="text-blue-600">New version</a>
+                    available
+                </span>
+            </mat-list-item>
+            <mat-list-item *ngIf="(buildInfo$ | async) as buildInfo">
+                <span matListItemTitle>Build</span>
+                <a matListItemLine target="_blank" *ngFor="let workflowRun of buildInfo.workflow_runs"
+                    [href]="workflowRun.html_url">{{
+                    workflowRun.name }}</a>
+            </mat-list-item>
+        </ng-container>
+    </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

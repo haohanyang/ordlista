@@ -1,0 +1,35 @@
+<div class="bs-container pt-32">
+    <p *ngIf="auth.userIdSubject$ | async; else noAuth">
+        You are logged in. Go to the <a routerLink="/" class="text-blue-600">home page</a>
+    </p>
+    <ng-template #noAuth>
+        <mat-card class="max-w-md mx-auto" appearance="outlined">
+            <mat-card-header>
+                <mat-card-title>Welcome back</mat-card-title>
+                <mat-card-subtitle>Don't have an account? <a routerLink="/signup" class="text-blue-600">Sign
+                        up</a></mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <form id="login-form" class="mt-3" (ngSubmit)="onSubmitLogin()" [formGroup]="signInForm">
+                    <mat-form-field appearance="outline" class="w-full">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" formControlName="email">
+                        <mat-icon matSuffix>mail_outlined</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-full">
+                        <mat-label>Password</mat-label>
+                        <input matInput type="password" formControlName="password">
+                        <mat-icon matSuffix>lock_outlined</mat-icon>
+                    </mat-form-field>
+                </form>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-flat-button type="submit" class="w-24 ml-auto" form="login-form" color="primary"
+                    [disabled]="isLoggingIn">
+                    <span *ngIf="!isLoggingIn">Log in</span>
+                    <mat-spinner *ngIf="isLoggingIn" diameter="20"></mat-spinner>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </ng-template>
+</div>

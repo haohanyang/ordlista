@@ -1,0 +1,31 @@
+<mat-toolbar color="primary" class="fixed top-0 z-50">
+    <div class="bs-container flex items-center">
+        <button class="pt-2 pr-2" *ngIf="backUrl" [routerLink]="backUrl">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span>{{ title }}</span>
+        <span class="grow shrink basis-auto"></span>
+        <button mat-icon-button (click)="openInfoModal()">
+            <mat-icon>info_outlined</mat-icon>
+        </button>
+        <ng-container *ngIf="(auth.userIdSubject$ | async) as userId; else loginButtons">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item routerLink="/settings">
+                    <mat-icon>settings</mat-icon>
+                    <span>Settings</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="openLogoutModal()">
+                    <mat-icon>logout</mat-icon>
+                    <span>Log out</span>
+                </button>
+            </mat-menu>
+        </ng-container>
+        <ng-template #loginButtons>
+            <button mat-flat-button color="accent" routerLink="/login" class="w-24">Log in</button>
+        </ng-template>
+    </div>
+</mat-toolbar>

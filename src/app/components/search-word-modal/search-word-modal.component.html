@@ -1,45 +1,32 @@
-<div class="modal" [ngClass]="isActive ? 'is-active' : ''">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">
-                Sök på Folkets lexikon
-            </p>
-        </header>
-        <section class="modal-card-body" style="overflow: hidden;">
-            <form [formGroup]="formGroup" (ngSubmit)="searchWord()">
-                <div class="field has-addons">
-                    <div class="control is-expanded">
-                        <input class="input" type="text" formControlName="keyword">
-                    </div>
-                    <div class="control">
-                        <button type="submit" class="button is-info" [ngClass]="isRequesting ? 'is-loading':''">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-            <div class="p-2 mt-2" style="overflow-y: scroll; max-height: 600px;">
-                <div *ngIf="requestError; else dataTemplate">
-                    <div class="notification is-danger" role="alert">
-                        {{ requestError }}
-                    </div>
-                </div>
-                <ng-template #dataTemplate>
-                    <div *ngIf="searchResults">
-                        {{ searchResults.length }} resultat hittades.
-                        <app-search-result-entry *ngFor="let word of searchResults" [word]="word" [userId]="userId"
-                            [listId]="listId" [addWordCallback]="addWordCallback"></app-search-result-entry>
-                    </div>
-                </ng-template>
-            </div>
-            <div class="notification is-info">
-                Du kan importera ord från Folkets lexikon genom att söka på ordet och sedan klicka på <i
-                    class="fa-solid fa-plus"></i> bredvid ordet.
-            </div>
-        </section>
-        <footer class="modal-card-foot">
-            <button type="button" class="button" (click)="closeCallback()">Avbryt</button>
-        </footer>
+<h1 mat-dialog-title>Import word from dictionary</h1>
+<div mat-dialog-content>
+    <form [formGroup]="formGroup" (ngSubmit)="searchWord()">
+        <mat-form-field appearance="outline" class="w-full pt-2">
+            <mat-label>Keyword</mat-label>
+            <input matInput formControlName="keyword">
+            <button mat-icon-button matSuffix type="submit" color="primary" [disabled]="isSearching">
+                <mat-icon>search</mat-icon>
+            </button>
+        </mat-form-field>
+    </form>
+    <div *ngIf="isSearching; else resultsT">
+        <mat-spinner diameter="30" class="mx-auto mt-3"></mat-spinner>
     </div>
+    <ng-template #resultsT>
+        <div *ngIf="searchError" role="alert">
+            {{ searchError }}
+        </div>
+        <div *ngIf="searchResults">
+            <div>
+                {{ searchResults.length }} results
+            </div>
+            <mat-list>
+                <app-search-result-entry *ngFor="let word of searchResults" [word]="word" [userId]="data.userId"
+                    [listId]="data.listId" [addWordCallback]="data.addWordCallback"></app-search-result-entry>
+            </mat-list>
+        </div>
+    </ng-template>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" [mat-dialog-close]="true" class="w-24">Cancel</button>
 </div>

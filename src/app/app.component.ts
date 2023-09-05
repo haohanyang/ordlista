@@ -1,64 +1,49 @@
-import { Component, OnDestroy } from "@angular/core"
+import { Component, OnDestroy, OnInit } from "@angular/core"
 import AuthService from "./auth.service"
-import { Subject, Subscription, of, switchMap, takeUntil } from "rxjs"
-import HttpService, { HttpServiceResponse } from "./http.service"
-import { User } from "./models/user"
-import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterEvent } from "@angular/router"
+import { Subscription } from "rxjs"
+import { MatBottomSheet } from "@angular/material/bottom-sheet"
+import { InstallPwaPromptComponent, InstallPwaPromptData } from "./components/install-pwa-prompt/install-pwa-prompt.component"
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnDestroy {
-  isMenuCollapsed = true;
-  user: User | null = null;
-  userSubscription: Subscription | null = null;
-  menuActive = false;
-  userDropdownActive = false;
-  isResolvingRoute = false;
-  isSigningOut = false;
-  routerUnsubscribe = new Subject<void>();
+export class AppComponent implements OnInit, OnDestroy {
+  authSubscription$: Subscription
+  isCheckingAuth = true
+  promptEvent: any
 
-  constructor(private authService: AuthService, private httpService: HttpService, private router: Router) {
-    this.userSubscription = this.authService.getUserId().pipe(switchMap(userId => {
-      if (userId) {
-        return this.httpService.getUserProfile(userId)
+  constructor(public auth: AuthService, private bottomSheet: MatBottomSheet) {
+  }
+
+  ngOnInit() {
+    this.isCheckingAuth = true
+    this.authSubscription$ = this.auth.authenticationTrigger$.subscribe(user => {
+      if (user) {
+        this.auth.userIdSubject$.next(user.username as string)
       }
-      const data: HttpServiceResponse<User> = { data: null, error: null }
-      return of(data)
-    })).subscribe(result => {
-      if (result.data) {
-        this.user = result.data
-      }
+      this.isCheckingAuth = false
     })
 
-    this.router.events.pipe(takeUntil(this.routerUnsubscribe))
-      .subscribe((routerEvent) => {
-        this.checkRouterEvent(routerEvent as RouterEvent)
-      })
-  }
+    window.addEventListener('beforeinstallprompt', (event: any) => {
+      event.preventDefault()
+      this.promptEvent = event
+      this.bottomSheet.open<InstallPwaPromptComponent, InstallPwaPromptData>(InstallPwaPromptComponent,
+        {
+          data: {
+            promptEvent: this.promptEvent,
+          }
+        })
+    })
 
-  checkRouterEvent(routerEvent: RouterEvent): void {
-    if (routerEvent instanceof NavigationStart) {
-      this.isResolvingRoute = true
-    }
-    if (routerEvent instanceof NavigationEnd || routerEvent instanceof NavigationCancel ||
-      routerEvent instanceof NavigationError) {
-      this.isResolvingRoute = false
-    }
-  }
+    window.addEventListener("appinstalled", () => {
+      console.log("afterinstallprompt")
+      this.promptEvent = null
+    })
 
+  }
   ngOnDestroy() {
-    this.userSubscription?.unsubscribe()
-    this.routerUnsubscribe.next()
-  }
-
-  signOut() {
-    this.isSigningOut = true
-    this.authService.signOut().subscribe(() => {
-      this.user = null
-      this.router.navigate(["/"]).then(() => window.location.reload())
-    })
+    this.authSubscription$.unsubscribe()
   }
 }

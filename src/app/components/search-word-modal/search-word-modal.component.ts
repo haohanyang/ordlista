@@ -1,48 +1,49 @@
-import { Component, Input } from "@angular/core"
-import { FormControl, FormGroup } from "@angular/forms"
+import { Component, Inject } from "@angular/core"
+import { FormControl, FormGroup, Validators } from "@angular/forms"
+import { MAT_DIALOG_DATA } from "@angular/material/dialog"
 import HttpService from "src/app/http.service"
 import { Word } from "src/app/models/word"
+
+export interface SearchWordModalData {
+  listId: string
+  userId: string
+  addWordCallback: (word: Word) => void
+}
 
 @Component({
   selector: "app-search-word-modal",
   templateUrl: "./search-word-modal.component.html"
 })
 export class SearchWordModalComponent {
-  @Input() listId: string
-  @Input() userId: string
-  @Input() isActive: boolean
-  @Input() closeCallback: () => void
-  @Input() addWordCallback: (word: Word, isImported: boolean) => void
-
   formGroup = new FormGroup({
-    keyword: new FormControl("")
+    keyword: new FormControl("", Validators.required)
   })
 
   searchResults: Word[] | null = null
-  isRequesting = false
-  requestError: string | null = null
+  isSearching = false
+  searchError: string | null = null
 
-  constructor(private httpService: HttpService) {
-  }
+  constructor(private httpService: HttpService, @Inject(MAT_DIALOG_DATA) public data: SearchWordModalData) { }
+
   get keyword() {
     return this.formGroup.controls["keyword"]
   }
 
   searchWord() {
-    if (this.keyword?.value) {
-      this.isRequesting = true
-      this.httpService.searchWord(this.keyword.value.trim().toLowerCase())
-        .subscribe(result => {
-          if (result.error) {
-            this.requestError = "Error searching word"
-            console.error(result.error)
-          } else {
-            this.searchResults = result.data!
+    if (this.keyword.value) {
+      this.isSearching = true
+      this.httpService.searchWord$(this.keyword.value.trim().toLowerCase())
+        .subscribe({
+          next: result => {
+            this.searchResults = result.result
+            this.isSearching = false
+          },
+          error: err => {
+            this.searchError = "Error searching word"
+            console.log(err)
+            this.isSearching = false
           }
-          this.isRequesting = false
         })
     }
   }
-
-
 }
