@@ -28,7 +28,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
     window.addEventListener('beforeinstallprompt', (event: any) => {
       event.preventDefault()
-      console.log("beforeinstallprompt")
       this.promptEvent = event
       this.bottomSheet.open<InstallPwaPromptComponent, InstallPwaPromptData>(InstallPwaPromptComponent,
         {

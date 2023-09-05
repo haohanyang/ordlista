@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core"
+import { Component } from "@angular/core"
 import { MatDialog } from "@angular/material/dialog"
 import { Title } from "@angular/platform-browser"
 import { Router } from "@angular/router"
@@ -11,23 +11,10 @@ import { InfoModalComponent } from "../info-modal/info-modal.component"
   selector: "app-top-nav",
   templateUrl: "./top-nav.component.html",
 })
-export class TopNavComponent implements OnInit {
+export class TopNavComponent {
   promptEvent: any
   constructor(public auth: AuthService, private titleService: Title, private router: Router,
     private dialog: MatDialog, public http: HttpService) {
-  }
-
-  ngOnInit() {
-    window.addEventListener('beforeinstallprompt', (event: any) => {
-      event.preventDefault()
-      console.log("beforeinstallprompt")
-      this.promptEvent = event
-    })
-
-    window.addEventListener("appinstalled", () => {
-      console.log("afterinstallprompt")
-      this.promptEvent = null
-    })
   }
 
   get title() {
