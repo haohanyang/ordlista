@@ -37,10 +37,12 @@ jobs:
         echo "NG_APP_ENV=test" >> .env
         echo "NG_APP_COMMIT_HASH=$GITHUB_SHA" >> .env
         echo "NG_APP_COMMIT_BRANCH=${GITHUB_REF#refs/heads/}" >> .env
+        echo "NG_APP_CDN_BASE_URL=$CDN_BASE_URL" >> .env
       env:
         COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
         COGNITO_USER_POOL_CLIENT_ID: ${{ secrets.COGNITO_USER_POOL_CLIENT_ID }}
         API_BASE_URL: ${{ secrets.API_BASE_URL }}
+        CDN_BASE_URL: ${{ secrets.CDN_BASE_URL }}
     - name: Build
       run: npm run build
     - name: Deploy to Netlify

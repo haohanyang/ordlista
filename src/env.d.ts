@@ -12,5 +12,6 @@ interface ImportMetaEnv {
   readonly NG_APP_API_BASE_URL: string
   readonly NG_APP_COMMIT_HASH: string
   readonly NG_APP_COMMIT_BRANCH: string
+  readonly NG_APP_CDN_BASE_URL: string
   [key: string]: any
 }

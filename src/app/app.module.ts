@@ -47,7 +47,8 @@ import AuthService from "./auth.service"
 import HttpService from "./http.service"
 import { HttpRequestInterceptor } from "./http.interceptor"
 import { InfoModalComponent } from './components/info-modal/info-modal.component'
-import { InstallPwaPromptComponent } from './components/install-pwa-prompt/install-pwa-prompt.component'
+import { InstallPwaPromptComponent } from './components/install-pwa-prompt/install-pwa-prompt.component';
+import { ProfileSettingsComponent } from './pages/profile-settings/profile-settings.component'
 @NgModule({
     declarations: [
         AppComponent, HomeComponent, WordlistsComponent, WordlistComponent, WordCardComponent,
@@ -55,7 +56,7 @@ import { InstallPwaPromptComponent } from './components/install-pwa-prompt/insta
         SearchResultEntryComponent, SaveWordModalComponent,
         BottomBarComponent, NotFoundPageComponent, SignUpComponent,
         SignUpComponent, LogInComponent, TopNavComponent,
-        AddWordSheetComponent, SettingsComponent, DiscoverComponent, LogoutModalComponent, InfoModalComponent, InstallPwaPromptComponent
+        AddWordSheetComponent, SettingsComponent, DiscoverComponent, LogoutModalComponent, InfoModalComponent, InstallPwaPromptComponent, ProfileSettingsComponent
     ],
     imports: [
         BrowserModule, AppRoutingModule, BrowserAnimationsModule,

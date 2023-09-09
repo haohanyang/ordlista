@@ -68,3 +68,5 @@ venv
 
 .aws-sam
 venv
+
+test.py

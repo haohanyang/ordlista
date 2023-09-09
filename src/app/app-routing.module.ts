@@ -10,6 +10,7 @@ import { SignUpComponent } from "./pages/signup/signup.component"
 import { authGuard } from "./auth.guard"
 import { DiscoverComponent } from "./pages/discover/discover.component"
 import { SettingsComponent } from "./pages/settings/settings.component"
+import { ProfileSettingsComponent } from "./pages/profile-settings/profile-settings.component"
 
 const routes: Routes = [
   {
@@ -52,6 +53,12 @@ const routes: Routes = [
     path: "settings",
     title: "Settings",
     component: SettingsComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: "settings/profile",
+    title: "Profile Settings",
+    component: ProfileSettingsComponent,
     canActivate: [authGuard]
   },
   {
