@@ -4,6 +4,7 @@ on:
   push:
     branches: [ "dev/**" ]
     paths:
+      - .github/workflows/netlify-test.yaml
       - src/app/**
       - src/assets/**
       - src/main.ts
