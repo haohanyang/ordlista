@@ -25,6 +25,9 @@ export class TopNavComponent {
     if (this.router.url.match(/\/lists\/[a-z0-9-]+/)) {
       return "/my-lists"
     }
+    if (this.router.url === "/settings/profile") {
+      return "/settings"
+    }
     return ""
   }
 

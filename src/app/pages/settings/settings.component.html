@@ -1,4 +1,32 @@
 <div class="bs-container pt-24">
-    <h1 class="text-2xl">TODO</h1>
+    <div *ngIf="(userProfile$ | async) as user; else loadingOrError">
+        <img src={{user.avatar}} class="w-24 h-24 rounded-full mx-auto object-cover">
+        <h2 class="text-lg mt-3 text-center">{{ user.username }}</h2>
+        <p class="text-gray-500 text-center">{{ user.bio }}</p>
+
+
+        <mat-card appearance="outlined" class="mt-3">
+            <mat-card-content style="padding: 0;">
+                <mat-action-list>
+                    <mat-list-item routerLink="/settings/profile">
+                        <mat-icon matListItemIcon>person</mat-icon>
+                        <span matListItemTitle>Profile</span>
+                    </mat-list-item>
+                    <mat-divider></mat-divider>
+                    <mat-list-item routerLink="/">
+                        <mat-icon matListItemIcon>manage_accounts</mat-icon>
+                        <span matListItemTitle>Account</span>
+                    </mat-list-item>
+                </mat-action-list>
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+    <ng-template #loadingOrError>
+        <div *ngIf="userProfileError">
+            {{userProfileError}}
+        </div>
+        <mat-spinner *ngIf="!userProfileError" diameter="30" class="mx-auto"></mat-spinner>
+    </ng-template>
 </div>
 <app-bottom-nav></app-bottom-nav>

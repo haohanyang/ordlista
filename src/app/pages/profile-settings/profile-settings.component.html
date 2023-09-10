@@ -1,0 +1,66 @@
+<div class="bs-container pt-24">
+    <form [formGroup]="profileForm" *ngIf="(userProfile$ | async) as user; else loadingOrError">
+        <mat-list>
+            <mat-list-item style="height: 120px;">
+                <img src={{this.avatar}} class="w-24 h-24 rounded-full object-cover">
+                <div matListItemMeta>
+                    <button *ngIf="!isUploadingAvatar" mat-icon-button (click)="imageInput.click()"
+                        matTooltip="Upload a new avatar" [disabled]="isUploadingAvatar">
+                        <mat-icon>upload</mat-icon>
+                    </button>
+                    <mat-spinner *ngIf="isUploadingAvatar" diameter="30" class="mx-auto"></mat-spinner>
+                    <input type="file" accept="image/png,image/jpeg" #imageInput (change)="uploadAvatar($event)" hidden>
+                </div>
+            </mat-list-item>
+            <mat-list-item>
+                <span matListItemTitle>Email</span>
+                <span matListItemLine>{{ user.email }}</span>
+            </mat-list-item>
+            <mat-list-item>
+                <mat-form-field *ngIf="editUsername">
+                    <input matInput formControlName="username" [disabled]="isSavingUsername">
+                </mat-form-field>
+                <span matListItemTitle *ngIf="!editUsername">Username</span>
+                <span matListItemLine *ngIf="!editUsername">{{ username }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="editUsername = false; username = user.username"
+                        *ngIf="editUsername">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button (click)="saveUsername()" *ngIf="editUsername"
+                        [disabled]="isSavingUsername">
+                        <mat-icon>save</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button (click)="editUsername = true" *ngIf="!editUsername">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item>
+                <span matListItemTitle>Bio</span>
+                <mat-form-field *ngIf="editBio">
+                    <input matListItemLine matInput formControlName="bio" *ngIf="editBio" [disabled]="isSavingBio">
+                </mat-form-field>
+                <span matListItemLine *ngIf="!editBio">{{ bio }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="editBio = false; bio = user.bio" *ngIf="editBio">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button (click)="saveBio()" *ngIf="editBio" [disabled]="isSavingBio">
+                        <mat-icon>save</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button (click)="editBio = true" *ngIf="!editBio">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+        </mat-list>
+    </form>
+    <ng-template #loadingOrError>
+        <div *ngIf="userProfileError">
+            {{userProfileError}}
+        </div>
+        <mat-spinner *ngIf="!userProfileError" diameter="30" class="mx-auto"></mat-spinner>
+    </ng-template>
+</div>
+<app-bottom-nav></app-bottom-nav>
