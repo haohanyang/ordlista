@@ -15,7 +15,6 @@ import { HomeComponent } from "./pages/home/home.component"
 import { WordlistsComponent } from "./pages/wordlists/wordlists.component"
 import { WordlistComponent } from "./pages/wordlist/wordlist.component"
 import { WordCardComponent } from "./components/word-card/word-card.component"
-import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular"
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http"
 import { TopNavComponent } from "./components/top-nav/top-nav.component"
 import { SaveListModalComponent } from "./components/save-list-modal/save-list-modal.component"
@@ -47,7 +46,7 @@ import AuthService from "./auth.service"
 import HttpService from "./http.service"
 import { HttpRequestInterceptor } from "./http.interceptor"
 import { InfoModalComponent } from './components/info-modal/info-modal.component'
-import { InstallPwaPromptComponent } from './components/install-pwa-prompt/install-pwa-prompt.component';
+import { InstallPwaPromptComponent } from './components/install-pwa-prompt/install-pwa-prompt.component'
 import { ProfileSettingsComponent } from './pages/profile-settings/profile-settings.component'
 @NgModule({
     declarations: [
@@ -60,7 +59,7 @@ import { ProfileSettingsComponent } from './pages/profile-settings/profile-setti
     ],
     imports: [
         BrowserModule, AppRoutingModule, BrowserAnimationsModule,
-        AmplifyAuthenticatorModule, MatInputModule, MatToolbarModule,
+        MatInputModule, MatToolbarModule,
         MatTooltipModule, MatFormFieldModule, ReactiveFormsModule,
         HttpClientModule, BrowserAnimationsModule, MatToolbarModule,
         MatIconModule, MatButtonModule, MatTabsModule,
