@@ -1,0 +1,12 @@
+<ion-spinner *ngIf="userId === null; else noAuth"> </ion-spinner>
+
+<ng-template #noAuth>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Home</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-button (click)="openLoginModal()">Log in</ion-button>
+  </ion-content>
+</ng-template>

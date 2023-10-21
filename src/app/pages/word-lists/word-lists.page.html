@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> Word Lists </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openActionSheet()">
+        <ion-icon
+          slot="icon-only"
+          ios="ellipsis-horizontal"
+          md="ellipsis-vertical"
+        >
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Word Lists</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-spinner *ngIf="isRequesting; else errorOrData"></ion-spinner>
+  <ng-template #errorOrData>
+    <div *ngIf="requestError">{{ requestError }}</div>
+    <ng-container *ngIf="listsHead">
+      <ion-list *ngFor="let lists of wordLists(listsHead)">
+        <ion-list-header>
+          <ion-label
+            >{{ "Created in " + formatDate(lists[0].createdAt) }}</ion-label
+          >
+        </ion-list-header>
+        <ion-item *ngFor="let list of lists">
+          <ion-icon slot="start" name="list-circle" size="large"></ion-icon>
+          <ion-label>{{ list.name }}</ion-label>
+          <ion-note slot="end">{{ list.wordCount + " words"}}</ion-note>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+  </ng-template>
+</ion-content>

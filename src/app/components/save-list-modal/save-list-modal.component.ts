@@ -1,74 +1,87 @@
-import { Component, Inject, OnInit } from "@angular/core"
-import { FormControl, FormGroup } from "@angular/forms"
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog"
-import { MatSnackBar } from "@angular/material/snack-bar"
-import HttpService from "src/app/http.service"
-import { WordList } from "src/app/models/wordlist"
-
-export interface SaveListModalData {
-  list: WordList | null
-  userId: string | null
-  onSuccessCallback: ((list: WordList) => void)
-}
+import { CommonModule } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { IonicModule, ModalController, ToastController } from "@ionic/angular";
+import { WordList } from "src/app/lib/model";
+import HttpService from "src/app/service/http.service";
 
 @Component({
   selector: "app-save-list-modal",
-  templateUrl: "./save-list-modal.component.html"
+  templateUrl: "./save-list-modal.component.html",
+  standalone: true,
+  imports: [IonicModule, CommonModule, ReactiveFormsModule],
 })
 export class SaveListModalComponent implements OnInit {
+  // @ts-ignore
+  @Input() list: WordList | null;
+  // @ts-ignore
+  @Input() userId: string;
+  // @ts-ignore
+  @Input() onSuccessCallback: (list: WordList) => void;
 
-  isRequesting = false
-  listFormGroup: FormGroup
+  isRequesting = false;
+  // @ts-ignore
+  listFormGroup: FormGroup;
 
-  constructor(private httpService: HttpService, private snackBar: MatSnackBar, public dialogRef: MatDialogRef<SaveListModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: SaveListModalData) { }
+  constructor(
+    private modalController: ModalController,
+    private httpService: HttpService,
+    private toastController: ToastController,
+  ) {}
 
   ngOnInit() {
     this.listFormGroup = new FormGroup({
-      name: new FormControl(this.data.list?.name || ""),
-      description: new FormControl(this.data.list?.description || "")
-    })
+      name: new FormControl(this.list?.name || "", [Validators.required]),
+      description: new FormControl(this.list?.description || ""),
+    });
   }
 
-  get name() {
-    return this.listFormGroup.controls["name"]
-  }
-
-  get description() {
-    return this.listFormGroup.controls["description"]
+  cancel() {
+    this.listFormGroup.reset();
+    this.modalController.dismiss();
   }
 
   saveList() {
-
-    if (this.data.userId && this.name.value && this.description.value) {
-      this.isRequesting = true
-
-      const observable = this.data.list ? this.httpService.updateList$({ ...this.listFormGroup.value, id: this.data.list.id })
-        : this.httpService.createList$({
-          id: "",
-          name: this.name.value,
-          description: this.description.value,
-          wordCount: 0,
-          creatorId: this.data.userId,
-          createdAt: ""
-        })
-      observable.subscribe({
-        next: result => {
-          this.isRequesting = false
-          this.data.onSuccessCallback(result.list)
-          this.dialogRef.close()
-          this.listFormGroup.reset()
-        },
-        error: err => {
-          this.snackBar.open("Failed to save the list", "Close", {
-            duration: 3000,
-            verticalPosition: "top",
-            horizontalPosition: "right"
+    if (this.listFormGroup.valid) {
+      const { name, description } = this.listFormGroup.value;
+      this.isRequesting = true;
+      const observable = this.list
+        ? this.httpService.updateList$({
+            ...this.listFormGroup.value,
+            id: this.list.id,
           })
-          console.log(err)
-          this.isRequesting = false
-        }
-      })
+        : this.httpService.createList$({
+            id: "",
+            name: name,
+            description: description,
+            wordCount: 0,
+            creatorId: this.userId,
+            createdAt: "",
+          });
+      observable.subscribe({
+        next: (result) => {
+          this.isRequesting = false;
+          this.onSuccessCallback(result.list);
+          this.modalController.dismiss();
+          this.listFormGroup.reset();
+        },
+        error: (err) => {
+          this.toastController
+            .create({
+              message: "Failed to save the list",
+              duration: 3000,
+              position: "bottom",
+            })
+            .then((toast) => toast.present());
+          console.log(err);
+          this.isRequesting = false;
+        },
+      });
     }
   }
 }

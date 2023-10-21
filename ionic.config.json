@@ -1,0 +1,7 @@
+{
+  "name": "Ordlista",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

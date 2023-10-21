@@ -1,18 +1,38 @@
-<h1 mat-dialog-title>{{ data.list ? "Edit list " + data.list.name : "Create new list" }}</h1>
-<form id="save-list-form" mat-dialog-content [formGroup]="listFormGroup" (ngSubmit)="saveList()">
-    <mat-form-field appearance="outline" class="w-full pt-3">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" required>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Description</mat-label>
-        <textarea matInput formControlName="description"></textarea>
-    </mat-form-field>
-</form>
-<div mat-dialog-actions align="end">
-    <button mat-stroked-button type="button" class="w-24" [mat-dialog-close]="true">Cancel</button>
-    <button mat-flat-button color="primary" type="submit" form="save-list-form" class="w-24" [disabled]="isRequesting">
-        <mat-spinner *ngIf="isRequesting" diameter="20"></mat-spinner>
-        <span *ngIf="!isRequesting">Save</span>
-    </button>
-</div>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{
+      list ? "Edit list " + list.name : "Create new list"
+    }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        [disabled]="isRequesting"
+        type="submit"
+        [strong]="true"
+        form="save-list-form"
+        >Create</ion-button
+      >
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form id="save-list-form" [formGroup]="listFormGroup">
+    <ion-item>
+      <ion-input
+        labelPlacement="stacked"
+        label="Name"
+        formControlName="name"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        labelPlacement="stacked"
+        label="Description"
+        formControlName="description"
+        formControlName="description"
+      ></ion-input>
+    </ion-item>
+  </form>
+</ion-content>

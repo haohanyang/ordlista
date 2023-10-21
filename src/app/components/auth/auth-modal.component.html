@@ -1,0 +1,103 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="mode === 'login'">Log in</ion-title>
+    <ion-title *ngIf="mode !== 'login'">Sign up</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form *ngIf="mode === 'login'" [formGroup]="loginInForm" (ngSubmit)="logIn()">
+    <ion-item>
+      <ion-input
+        labelPlacement="stacked"
+        label="Email"
+        formControlName="email"
+        placeholder="john.doe@example.com"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        labelPlacement="stacked"
+        label="Password"
+        type="password"
+        formControlName="password"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item lines="none">
+      Don't have an account?
+      <ion-button fill="clear" (click)="mode = 'signup'">Sign up</ion-button>
+    </ion-item>
+    <ion-button
+      type="submit"
+      expand="block ion-margin-horizontal ion-margin-top"
+      [disabled]="isRequesting"
+    >
+      Login
+    </ion-button>
+  </form>
+
+  <form
+    *ngIf="mode === 'signup'"
+    [formGroup]="signUpForm"
+    (ngSubmit)="signUp()"
+  >
+    <ion-item>
+      <ion-input labelPlacement="stacked" label="Email" formControlName="email">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        labelPlacement="stacked"
+        label="Username"
+        formControlName="username"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        labelPlacement="stacked"
+        label="Password"
+        type="password"
+        formControlName="password"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-button
+      type="submit"
+      *ngIf="mode === 'signup'"
+      expand="block ion-margin-horizontal ion-margin-top"
+    >
+      Create account
+    </ion-button>
+  </form>
+
+  <form
+    *ngIf="mode === 'confirm'"
+    [formGroup]="confirmForm"
+    (ngSubmit)="confirm()"
+  >
+    <ion-item lines="none">
+      Enter the confirmation code sent to {{ maskedEmail }}
+    </ion-item>
+    <ion-item>
+      <ion-input
+        labelPlacement="stacked"
+        label="Confirm Code"
+        type="text"
+        formControlName="confirmCode"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-button
+      type="submit"
+      expand="block ion-margin-horizontal ion-margin-top"
+      [disabled]="isRequesting"
+    >
+      Verify email
+    </ion-button>
+  </form>
+</ion-content>
