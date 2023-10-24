@@ -11,14 +11,13 @@ import HttpService from "src/app/service/http.service";
 import AuthService from "src/app/service/auth.service";
 import * as moment from "moment";
 import { SaveListModalComponent } from "src/app/components/save-list-modal/save-list-modal.component";
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
-import { AuthInterceptor } from "src/app/auth.interceptor";
+import { RouterModule } from "@angular/router"
 
 @Component({
   selector: "app-tab1",
   templateUrl: "word-lists.page.html",
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [IonicModule, CommonModule, RouterModule],
 })
 export class WordListsPage implements OnInit {
   isRequesting = false;

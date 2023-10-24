@@ -28,17 +28,17 @@ export default class AuthService {
     map((result) => (result ? (result.username as string) : null)),
   );
 
-  constructor() {
-    Auth.currentAuthenticatedUser()
-      .then((e) => {
-        console.log(e);
-        this.userIdSubject$.next(e.username);
-      })
-      .catch((e) => {
-        console.log(e);
-        this.userIdSubject$.next(null);
-      });
-  }
+  // constructor() {
+  //   Auth.currentAuthenticatedUser()
+  //     .then((e) => {
+  //       console.log(e);
+  //       this.userIdSubject$.next(e.username);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //       this.userIdSubject$.next(null);
+  //     });
+  // }
 
   logIn$(email: string, password: string): Observable<any> {
     return from(Auth.signIn(email, password)).pipe(

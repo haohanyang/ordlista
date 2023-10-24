@@ -2,6 +2,8 @@ import { Routes } from "@angular/router";
 import { HomePage } from "./pages/home/home.page";
 import { TabsPage } from "./layout/tabs.page";
 import { authGuard } from "./auth.guard";
+import { wordlistResolver } from "./pages/word-list/word-list.resolve"
+import { WordListComponent } from "./pages/word-list/word-list.page"
 
 export const routes: Routes = [
   {
@@ -9,7 +11,7 @@ export const routes: Routes = [
     component: HomePage,
   },
   {
-    path: "app",
+    path: "tabs",
     component: TabsPage,
     canActivateChild: [authGuard],
     children: [
@@ -32,4 +34,13 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: "lists/:id",
+    component: WordListComponent,
+    title: "List",
+    canActivate: [authGuard],
+    resolve: {
+      listResult: wordlistResolver
+    }
+  }
 ];

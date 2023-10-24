@@ -13,7 +13,7 @@ import AuthService from "src/app/service/auth.service";
   imports: [IonicModule, CommonModule],
 })
 export class HomePage implements OnInit {
-  userId: string | null = null;
+  isCheckingAuth = true;
 
   constructor(
     private modalController: ModalController,
@@ -30,12 +30,15 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     Auth.currentAuthenticatedUser()
-      .then((e) => {
-        this.authService.userIdSubject$.next(e.username);
-        this.router.navigate(["/app"]);
+      .then((user) => {
+        this.authService.userIdSubject$.next(user.username);
+        this.router.navigate(["/tabs"]);
       })
       .catch((e) => {
         console.log(e);
-      });
+      })
+      .finally(() => {
+        this.isCheckingAuth = false;
+      })
   }
 }

@@ -31,7 +31,7 @@
             >{{ "Created in " + formatDate(lists[0].createdAt) }}</ion-label
           >
         </ion-list-header>
-        <ion-item *ngFor="let list of lists">
+        <ion-item *ngFor="let list of lists" [routerLink]="['/lists', list.id]">
           <ion-icon slot="start" name="list-circle" size="large"></ion-icon>
           <ion-label>{{ list.name }}</ion-label>
           <ion-note slot="end">{{ list.wordCount + " words"}}</ion-note>
